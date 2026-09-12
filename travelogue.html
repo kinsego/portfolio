@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Travelogue — name</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead__top">
+    <span class="masthead__issue"><a href="index.html">← Back to work</a></span>
+    <span class="masthead__date" id="year"></span>
+  </div>
+  <h1 class="masthead__name">Travelogue</h1>
+  <p class="masthead__tagline">Notes and photos from trips that shape how I see design.</p>
+</header>
+
+<section class="travelogue" id="travelogue-page">
+  <div class="travelogue__inner">
+    <div class="travelogue__list">
+
+      <a class="travelogue__row" href="#">
+        <span class="travelogue__title">Entry Title One</span>
+        <span class="travelogue__leader" aria-hidden="true"></span>
+        <span class="travelogue__meta">Lisbon — 2025</span>
+      </a>
+
+      <a class="travelogue__row" href="#">
+        <span class="travelogue__title">Entry Title Two</span>
+        <span class="travelogue__leader" aria-hidden="true"></span>
+        <span class="travelogue__meta">Kyoto — 2024</span>
+      </a>
+
+      <a class="travelogue__row" href="#">
+        <span class="travelogue__title">Entry Title Three</span>
+        <span class="travelogue__leader" aria-hidden="true"></span>
+        <span class="travelogue__meta">Oaxaca — 2024</span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- Fixed bottom dock nav — stays put while the page scrolls -->
+<nav class="dock" aria-label="Primary">
+  <a class="dock__link" href="index.html#about">About</a>
+  <a class="dock__link" href="index.html#work">Work</a>
+  <a class="dock__link" href="assets/resume.pdf" target="_blank" rel="noopener">Resume</a>
+  <a class="dock__link is-active" href="travelogue.html">Travel</a>
+  <a class="dock__link" href="index.html#contact">Contact</a>
+</nav>
+
+<script src="script.js"></script>
+</body>
+</html>
+
+Add standalone travelogue page
