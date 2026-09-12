@@ -7,8 +7,8 @@
      --rule    #C9C4B8  hairlines / leader dots
      --muted   #6E6858  secondary text
    Type:
-     Display — 'Fraunces' (editorial serif, soft/quirky optical forms)
-     Body/meta — 'Inter' (plain grotesk, quiet workhorse)
+     Display — 'Jost'
+     Body/meta — 'Futura', sans-serif;
    ============================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Inter:wght@400;500&display=swap');
@@ -292,3 +292,5 @@ a{ color: inherit; text-decoration: none; }
     white-space: normal;
   }
 }
+
+"Switch display font to Jost,"
