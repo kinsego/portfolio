@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Name — Print &amp; Editorial Design</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead__top">
+    <span class="masthead__issue">No. 01 — Selected Works</span>
+    <span class="masthead__date" id="year"></span>
+  </div>
+  <h1 class="masthead__name">Your Name</h1>
+  <p class="masthead__tagline">Print &amp; editorial design. Based in [City].</p>
+</header>
+
+<main class="contents" id="work" aria-label="Project index">
+
+  <div class="contents__list" id="project-list">
+
+    <a class="contents__row" href="projects/project-one.html" data-preview="assets/preview-01.jpg">
+      <span class="contents__number">01</span>
+      <span class="contents__title">Project Title One</span>
+      <span class="contents__leader" aria-hidden="true"></span>
+      <span class="contents__meta">Identity &amp; Print — 2025</span>
+    </a>
+
+    <a class="contents__row" href="projects/project-two.html" data-preview="assets/preview-02.jpg">
+      <span class="contents__number">02</span>
+      <span class="contents__title">Project Title Two</span>
+      <span class="contents__leader" aria-hidden="true"></span>
+      <span class="contents__meta">Editorial — 2024</span>
+    </a>
+
+    <a class="contents__row" href="projects/project-three.html" data-preview="assets/preview-03.jpg">
+      <span class="contents__number">03</span>
+      <span class="contents__title">Project Title Three</span>
+      <span class="contents__leader" aria-hidden="true"></span>
+      <span class="contents__meta">Poster Series — 2024</span>
+    </a>
+
+    <a class="contents__row" href="projects/project-four.html" data-preview="assets/preview-04.jpg">
+      <span class="contents__number">04</span>
+      <span class="contents__title">Project Title Four</span>
+      <span class="contents__leader" aria-hidden="true"></span>
+      <span class="contents__meta">Book Design — 2023</span>
+    </a>
+
+  </div>
+
+  <div class="preview" id="preview" aria-hidden="true">
+    <div class="preview__frame">
+      <img class="preview__image" id="preview-image" src="assets/preview-01.jpg" alt="">
+    </div>
+  </div>
+
+</main>
+
+<section class="about" id="about">
+  <div class="about__inner">
+    <p class="about__text">
+      A short paragraph about you — what you design, how you approach it,
+      and what kind of work you're looking for next. Two to three sentences,
+      written plainly.
+    </p>
+  </div>
+</section>
+
+<footer class="colophon" id="contact">
+  <div class="colophon__row">
+    <a href="mailto:you@example.com">you@example.com</a>
+    <a href="https://instagram.com/yourhandle" target="_blank" rel="noopener">Instagram</a>
+    <a href="assets/resume.pdf" target="_blank" rel="noopener">Résumé</a>
+  </div>
+</footer>
+
+<!-- Fixed bottom dock nav — stays put while the page scrolls -->
+<nav class="dock" aria-label="Primary">
+  <a class="dock__link" href="#work" data-section="work">Work</a>
+  <a class="dock__link" href="#about" data-section="about">About</a>
+  <a class="dock__link" href="#contact" data-section="contact">Contact</a>
+</nav>
+
+<script src="script.js"></script>
+</body>
+</html>
