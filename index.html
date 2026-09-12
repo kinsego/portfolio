@@ -1,415 +1,93 @@
-/* ============================================
-   DESIGN TOKENS
-   Color:
-     --paper   #F6F4EE  warm paper background
-     --ink     #17140F  near-black, warm
-     --press   #3E9CC4  sky-blue accent (sparing use)
-     --rule    #C9C4B8  hairlines / leader dots
-     --muted   #6E6858  secondary text
-   Type:
-     Display — 'Jost' (geometric sans, close to the Eagle Book / Futura family)
-     Body/meta — 'Inter' (plain grotesk, quiet workhorse)
-   ============================================ */
-
-@import url('https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Inter:wght@400;500&display=swap');
-
-:root{
-  --paper: #F6F4EE;
-  --ink: #17140F;
-  --press: #3E9CC4;
-  --rule: #C9C4B8;
-  --muted: #6E6858;
-
-  --display: 'Jost', 'Futura', sans-serif;
-  --body: 'Inter', -apple-system, sans-serif;
-}
-
-*{ box-sizing: border-box; }
-
-html, body{
-  margin: 0;
-  padding: 0;
-  background: var(--paper);
-  color: var(--ink);
-  font-family: var(--body);
-}
-
-a{ color: inherit; text-decoration: none; }
-
-/* ---------- Masthead ---------- */
-
-.masthead{
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 3rem 2rem 2rem;
-}
-
-.masthead__top{
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.8rem;
-  color: var(--muted);
-  border-bottom: 1px solid var(--rule);
-  padding-bottom: 0.75rem;
-  margin-bottom: 1.5rem;
-  letter-spacing: 0.01em;
-}
-
-.masthead__name{
-  font-family: var(--display);
-  font-weight: 600;
-  font-size: clamp(2.75rem, 7vw, 5rem);
-  line-height: 0.95;
-  margin: 0 0 0.5rem;
-  text-transform: uppercase;
-  letter-spacing: 0.01em;
-}
-
-.masthead__tagline{
-  font-size: 1.05rem;
-  color: var(--muted);
-  margin: 0;
-  max-width: 40ch;
-}
-
-/* ---------- Contents / TOC layout ---------- */
-
-.contents{
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 1rem 2rem 4rem;
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 3rem;
-  align-items: start;
-}
-
-.contents__list{
-  display: flex;
-  flex-direction: column;
-}
-
-.contents__row{
-  display: grid;
-  grid-template-columns: 2.5rem auto 1fr auto;
-  align-items: baseline;
-  gap: 0.75rem;
-  padding: 1.1rem 0;
-  border-bottom: 1px solid var(--rule);
-  transition: color 0.15s ease;
-}
-
-.contents__row:hover{
-  color: var(--press);
-}
-
-.contents__row:first-child{
-  border-top: 1px solid var(--rule);
-}
-
-.contents__number{
-  font-family: var(--body);
-  font-size: 0.85rem;
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
-}
-
-.contents__row:hover .contents__number{
-  color: var(--press);
-}
-
-.contents__title{
-  font-family: var(--display);
-  font-weight: 500;
-  font-size: clamp(1.3rem, 2.4vw, 1.9rem);
-  white-space: nowrap;
-}
-
-.contents__leader{
-  border-bottom: 1px dotted var(--rule);
-  height: 0.6em;
-  align-self: end;
-  min-width: 1.5rem;
-}
-
-.contents__meta{
-  font-size: 0.85rem;
-  color: var(--muted);
-  white-space: nowrap;
-}
-
-/* ---------- Preview panel (the one playful moment) ---------- */
-
-.preview{
-  position: sticky;
-  top: 3rem;
-  aspect-ratio: 4 / 5;
-  display: none;
-}
-
-.preview__frame{
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background: #EAE6DA;
-  box-shadow: 0 18px 40px rgba(23, 20, 15, 0.12);
-  transform: rotate(-1.2deg);
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.preview.is-active .preview__frame{
-  transform: rotate(0.6deg);
-}
-
-.preview__image{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0;
-  transition: opacity 0.25s ease;
-}
-
-.preview__image.is-loaded{
-  opacity: 1;
-}
-
-@media (min-width: 860px){
-  .preview{ display: block; }
-}
-
-/* ---------- Travelogue (list version — kept for reference, unused if using gallery) ---------- */
-
-.travelogue{
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 1rem 2rem 3rem;
-  border-top: 1px solid var(--rule);
-}
-
-.travelogue__inner{
-  padding-top: 2rem;
-}
-
-.travelogue__intro{
-  font-size: 0.95rem;
-  color: var(--muted);
-  max-width: 50ch;
-  margin: 0 0 1.5rem;
-}
-
-.travelogue__row{
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: baseline;
-  gap: 0.75rem;
-  padding: 0.9rem 0;
-  border-bottom: 1px solid var(--rule);
-  transition: color 0.15s ease;
-}
-
-.travelogue__row:first-child{
-  border-top: 1px solid var(--rule);
-}
-
-.travelogue__row:hover{
-  color: var(--press);
-}
-
-.travelogue__title{
-  font-family: var(--display);
-  font-weight: 500;
-  font-size: clamp(1.05rem, 1.8vw, 1.3rem);
-}
-
-.travelogue__leader{
-  border-bottom: 1px dotted var(--rule);
-  height: 0.6em;
-  align-self: end;
-  min-width: 1.5rem;
-}
-
-.travelogue__meta{
-  font-size: 0.8rem;
-  color: var(--muted);
-  white-space: nowrap;
-}
-
-/* ---------- Masthead variant: no name/tagline (used on Travelogue) ---------- */
-
-.masthead--minimal{
-  padding-bottom: 1rem;
-}
-
-/* ---------- Gallery (masonry, varied shapes, generous negative space) ---------- */
-
-.gallery{
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 2rem 3rem 8rem;
-  column-count: 3;
-  column-gap: 4rem;
-}
-
-.gallery__item{
-  display: block;
-  break-inside: avoid;
-  margin-bottom: 4rem;
-}
-
-.gallery__placeholder{
-  width: 100%;
-  background: #EAE6DA;
-  border-radius: 2px;
-}
-
-/* varied aspect ratios so the grid doesn't feel uniform */
-.gallery__item--tall .gallery__placeholder{ aspect-ratio: 3 / 4.5; }
-.gallery__item--wide .gallery__placeholder{ aspect-ratio: 16 / 10; }
-.gallery__item--square .gallery__placeholder{ aspect-ratio: 1 / 1; }
-
-.gallery__caption{
-  margin-top: 0.85rem;
-  font-size: 0.8rem;
-  color: var(--muted);
-}
-
-@media (max-width: 900px){
-  .gallery{
-    column-count: 2;
-    column-gap: 2.5rem;
-    padding: 1.5rem 1.5rem 8rem;
-  }
-  .gallery__item{
-    margin-bottom: 2.5rem;
-  }
-}
-
-@media (max-width: 560px){
-  .gallery{
-    column-count: 1;
-  }
-}
-
-/* ---------- About ---------- */
-
-.about{
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 1rem 2rem 3rem;
-  border-top: 1px solid var(--rule);
-}
-
-.about__inner{
-  padding-top: 2rem;
-  max-width: 60ch;
-}
-
-.about__text{
-  font-family: var(--display);
-  font-weight: 400;
-  font-size: clamp(1.15rem, 2vw, 1.5rem);
-  line-height: 1.5;
-  margin: 0;
-}
-
-/* ---------- Colophon / footer ---------- */
-
-.colophon{
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 2rem 2rem 3rem;
-  border-top: 1px solid var(--rule);
-}
-
-.colophon__row{
-  display: flex;
-  gap: 1.75rem;
-  font-size: 0.85rem;
-  color: var(--muted);
-}
-
-.colophon__row a:hover{
-  color: var(--press);
-}
-
-/* room so the fixed dock never covers the last row of content */
-.colophon{
-  padding-bottom: 6rem;
-}
-
-/* ---------- Dock nav (fixed, persists through scroll) ---------- */
-
-.dock{
-  position: fixed;
-  left: 50%;
-  bottom: 1.5rem;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 0.25rem;
-  background: var(--ink);
-  border-radius: 999px;
-  padding: 0.4rem;
-  box-shadow: 0 12px 30px rgba(23, 20, 15, 0.25);
-  z-index: 100;
-  max-width: calc(100vw - 2rem);
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.dock::-webkit-scrollbar{
-  display: none;
-}
-
-.dock__link{
-  font-family: var(--body);
-  font-size: 0.85rem;
-  color: rgba(246, 244, 238, 0.65);
-  padding: 0.55rem 1.1rem;
-  border-radius: 999px;
-  transition: color 0.2s ease, background 0.2s ease;
-  white-space: nowrap;
-}
-
-.dock__link:hover{
-  color: var(--paper);
-}
-
-.dock__link.is-active{
-  color: var(--paper);
-  background: var(--press);
-}
-
-@media (max-width: 480px){
-  .dock{
-    bottom: 1rem;
-    padding: 0.35rem;
-  }
-  .dock__link{
-    padding: 0.5rem 0.85rem;
-    font-size: 0.8rem;
-  }
-}
-
-/* ---------- Motion preference ---------- */
-
-@media (prefers-reduced-motion: reduce){
-  .preview__frame,
-  .preview__image,
-  .contents__row{
-    transition: none;
-  }
-}
-
-/* ---------- Mobile ---------- */
-
-@media (max-width: 640px){
-  .contents__row{
-    grid-template-columns: 2rem auto;
-    row-gap: 0.25rem;
-  }
-  .contents__leader{ display: none; }
-  .contents__meta{
-    grid-column: 2;
-    white-space: normal;
-  }
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>John Wong : Designer</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead__top">
+    <span class="masthead__issue">No. 01 — Selected Works</span>
+    <span class="masthead__date" id="year"></span>
+  </div>
+  <h1 class="masthead__name">John Wong</h1>
+   <p class="masthead__tagline">Motion &amp; Print design. </p>
+</header>
+
+<section class="about" id="about">
+  <div class="about__inner">
+    <p class="about__text">
+      Hi, I'm John.
+      A designer from Brooklyn.
+      Inquisitive by nature, I love to analyze and solve problems.
+    </p>
+  </div>
+</section>
+
+<main class="contents" id="work" aria-label="Project index">
+
+  <div class="contents__list" id="project-list">
+
+    <a class="contents__row" href="projects/project-one.html" data-preview="assets/preview-01.jpg">
+      <span class="contents__number">01</span>
+      <span class="contents__title">Let's Explore Campaign</span>
+      <span class="contents__leader" aria-hidden="true"></span>
+      <span class="contents__meta">Identity &amp; Print — 2025</span>
+    </a>
+
+    <a class="contents__row" href="projects/project-two.html" data-preview="assets/preview-02.jpg">
+      <span class="contents__number">02</span>
+      <span class="contents__title">Project Title Two</span>
+      <span class="contents__leader" aria-hidden="true"></span>
+      <span class="contents__meta">Editorial — 2024</span>
+    </a>
+
+    <a class="contents__row" href="projects/project-three.html" data-preview="assets/preview-03.jpg">
+      <span class="contents__number">03</span>
+      <span class="contents__title">Project Title Three</span>
+      <span class="contents__leader" aria-hidden="true"></span>
+      <span class="contents__meta">Poster Series — 2024</span>
+    </a>
+
+    <a class="contents__row" href="projects/project-four.html" data-preview="assets/preview-04.jpg">
+      <span class="contents__number">04</span>
+      <span class="contents__title">Project Title Four</span>
+      <span class="contents__leader" aria-hidden="true"></span>
+      <span class="contents__meta">Book Design — 2023</span>
+    </a>
+
+  </div>
+
+  <div class="preview" id="preview" aria-hidden="true">
+    <div class="preview__frame">
+      <img class="preview__image" id="preview-image" src="assets/preview-01.jpg" alt="">
+    </div>
+  </div>
+
+</main>
+
+<footer class="colophon" id="contact">
+  <div class="colophon__row">
+    <a href="mailto:you@example.com">you@example.com</a>
+    <a href="https://instagram.com/yourhandle" target="_blank" rel="noopener">Instagram</a>
+    <a href="assets/resume.pdf" target="_blank" rel="noopener">Résumé</a>
+  </div>
+</footer>
+
+<!-- Fixed bottom dock nav — stays put while the page scrolls -->
+<nav class="dock" aria-label="Primary">
+  <a class="dock__link" href="#about" data-section="about">About</a>
+  <a class="dock__link" href="#work" data-section="work">Work</a>
+  <a class="dock__link" href="assets/resume.pdf" target="_blank" rel="noopener">Resume</a>
+  <a class="dock__link" href="travelogue.html">Travelogue</a>
+  <a class="dock__link" href="#contact" data-section="contact">Contact</a>
+</nav>
+  
+<script src="script.js"></script>
+</body>
+</html>
+
+Move travelogue to its own page, reorder nav,
