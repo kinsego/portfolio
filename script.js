@@ -26,7 +26,7 @@ rows.forEach(row => {
 
 // Fixed dock nav: highlight the section currently in view
 const dockLinks = document.querySelectorAll('.dock__link');
-const sections = ['work', 'about', 'contact']
+const sections = ['about', 'work', 'contact']
   .map(id => document.getElementById(id))
   .filter(Boolean);
 
