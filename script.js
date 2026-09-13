@@ -48,3 +48,44 @@ const observer = new IntersectionObserver(
 );
 
 sections.forEach(section => observer.observe(section));
+
+// Gallery lightbox: click a photo to expand it, click/Escape to close
+const galleryImages = document.querySelectorAll('.gallery__img');
+
+if (galleryImages.length) {
+  const lightbox = document.createElement('div');
+  lightbox.className = 'lightbox';
+  lightbox.innerHTML = `
+    <button class="lightbox__close" aria-label="Close">&times;</button>
+    <img class="lightbox__img" src="" alt="">
+  `;
+  document.body.appendChild(lightbox);
+
+  const lightboxImg = lightbox.querySelector('.lightbox__img');
+  const closeBtn = lightbox.querySelector('.lightbox__close');
+
+  const openLightbox = (src, alt) => {
+    lightboxImg.src = src;
+    lightboxImg.alt = alt;
+    lightbox.classList.add('is-open');
+  };
+
+  const closeLightbox = () => {
+    lightbox.classList.remove('is-open');
+  };
+
+  galleryImages.forEach(img => {
+    img.addEventListener('click', () => openLightbox(img.src, img.alt));
+  });
+
+  lightbox.addEventListener('click', (e) => {
+    // close when clicking the dark background, not the image itself
+    if (e.target === lightbox) closeLightbox();
+  });
+
+  closeBtn.addEventListener('click', closeLightbox);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLightbox();
+  });
+}
