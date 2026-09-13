@@ -250,27 +250,25 @@ a{ color: inherit; text-decoration: none; }
   padding-bottom: 1rem;
 }
 
-/* ---------- Gallery (3 columns, natural sizes, no cropping) ---------- */
+/* ---------- Gallery (single large column, with a minimap side-nav) ---------- */
 
-.gallery{
-  max-width: 1400px;
+.gallery-wrap{
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 2rem 3rem 8rem;
+  padding: 2rem 5rem 8rem 3rem;
+  position: relative;
   display: flex;
-  align-items: flex-start;
-  gap: 1.5rem;
+  gap: 2rem;
 }
 
-.gallery__col{
-  display: flex;
-  flex-direction: column;
+.gallery{
   flex: 1;
   min-width: 0;
 }
 
 .gallery__item{
   display: block;
-  margin-bottom: 2rem;
+  margin-bottom: 4rem;
 }
 
 .gallery__cell{
@@ -296,7 +294,7 @@ a{ color: inherit; text-decoration: none; }
   text-align: center;
   padding: 1rem;
   font-family: var(--masthead-font);
-  font-size: clamp(1.3rem, 3vw, 2.25rem);
+  font-size: clamp(1.5rem, 5vw, 3rem);
   letter-spacing: -0.01em;
   color: var(--paper);
   background: rgba(23, 20, 15, 0.4);
@@ -310,15 +308,45 @@ a{ color: inherit; text-decoration: none; }
 }
 
 .gallery__caption-under{
-  margin-top: 0.5rem;
-  font-size: 0.8rem;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
   color: var(--muted);
 }
 
+/* the minimap: a fixed vertical strip of numbers, one per photo, that
+   highlights whichever photo is currently in view and jumps on click */
+.minimap{
+  position: sticky;
+  top: 3rem;
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 2rem;
+}
+
+.minimap__link{
+  font-family: var(--body);
+  font-size: 0.75rem;
+  color: var(--rule);
+  transition: color 0.15s ease;
+}
+
+.minimap__link:hover{
+  color: var(--muted);
+}
+
+.minimap__link.is-active{
+  color: var(--press);
+  font-weight: 500;
+}
+
 @media (max-width: 900px){
-  .gallery{
-    flex-direction: column;
+  .gallery-wrap{
     padding: 1.5rem 1.5rem 8rem;
+  }
+  .minimap{
+    display: none;
   }
 }
 
