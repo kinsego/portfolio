@@ -56,11 +56,24 @@ sections.forEach(section => observer.observe(section));
 const galleryEl = document.getElementById('travelogue-gallery');
 
 if (galleryEl) {
+  // seeded random number generator — produces the same sequence every time,
+  // so the "random" layout is actually fixed instead of reshuffling on
+  // every page load or resize
+  const makeSeededRandom = (seed) => {
+    return function() {
+      seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+      let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  };
+
   const buildJustifiedGallery = () => {
     const cells = Array.from(galleryEl.querySelectorAll('.gallery__cell'));
     if (!cells.length) return;
 
     const containerWidth = galleryEl.clientWidth;
+    const rand = makeSeededRandom(42); // fixed seed — always the same layout
 
     cells.forEach(cell => cell.remove());
     galleryEl.innerHTML = '';
@@ -72,18 +85,18 @@ if (galleryEl) {
 
     let i = 0;
     while (i < cells.length) {
-      const targetHeight = 60 + Math.random() * 440; // ~60–500px, wider spread
-      const rowGap = 5 + Math.random() * 18;
-      const innerStackGap = 4 + Math.random() * 10;
+      const targetHeight = 60 + rand() * 440; // ~60–500px, wider spread
+      const rowGap = 5 + rand() * 18;
+      const innerStackGap = 4 + rand() * 10;
       // how likely this specific row is to use stacked pairs — varies row to row
-      const stackChance = 0.15 + Math.random() * 0.45; // ~15%–60%
+      const stackChance = 0.15 + rand() * 0.45; // ~15%–60%
 
       // each "slot" is either { type: 'single', cell } or { type: 'stack', cells: [a, b] }
       const slots = [];
       let widthAtTarget = 0;
 
       while (i < cells.length) {
-        const makeStack = Math.random() < stackChance && i + 1 < cells.length;
+        const makeStack = rand() < stackChance && i + 1 < cells.length;
 
         let slotRatio, slot;
         if (makeStack) {
@@ -126,7 +139,7 @@ if (galleryEl) {
       const rowEl = document.createElement('div');
       rowEl.className = 'gallery__row';
       rowEl.style.gap = `${rowGap}px`;
-      rowEl.style.marginBottom = `${6 + Math.random() * 14}px`;
+      rowEl.style.marginBottom = `${6 + rand() * 14}px`;
       rowEl.style.alignItems = 'flex-start'; // let stacked slots be taller/shorter than singles
 
       slots.forEach(slot => {
