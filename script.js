@@ -61,7 +61,7 @@ if (galleryEl) {
     if (!cells.length) return;
 
     const containerWidth = galleryEl.clientWidth;
-    const gap = 10.8; // px, matches the 0.675rem gap used elsewhere
+    const gap = 5.4; // px, matches the 0.3375rem gap used elsewhere
 
     cells.forEach(cell => cell.remove());
     galleryEl.innerHTML = '';
