@@ -49,6 +49,101 @@ const observer = new IntersectionObserver(
 
 sections.forEach(section => observer.observe(section));
 
+// Gallery: build true justified rows (real image proportions, no cropping),
+// with every row's total width exactly matching the container's edges.
+const galleryEl = document.getElementById('travelogue-gallery');
+
+if (galleryEl) {
+  const buildJustifiedGallery = () => {
+    const images = Array.from(galleryEl.querySelectorAll('.gallery__img'));
+    if (!images.length) return;
+
+    const containerWidth = galleryEl.clientWidth;
+
+    // pull images out of the flow so we can regroup them into row divs
+    images.forEach(img => img.remove());
+    galleryEl.innerHTML = '';
+
+    let i = 0;
+    while (i < images.length) {
+      // random target height for this row — tight range, genuinely varied
+      const targetHeight = 140 + Math.random() * 110; // ~140–250px
+      const rowGap = 6 + Math.random() * 14;           // ~6–20px between photos in this row
+
+      const row = [];
+      let widthAtTarget = 0;
+
+      while (i < images.length) {
+        const img = images[i];
+        const ratio = img.naturalWidth / img.naturalHeight;
+        const widthContribution = ratio * targetHeight;
+        const gapContribution = row.length > 0 ? rowGap : 0;
+
+        if (row.length > 0 && widthAtTarget + gapContribution + widthContribution > containerWidth) {
+          break; // this image would overflow — finalize the row without it
+        }
+
+        row.push({ img, ratio });
+        widthAtTarget += gapContribution + widthContribution;
+        i++;
+      }
+
+      // scale the row so its total width lands exactly on the container's edges —
+      // this is what keeps left/right aligned without cropping any photo
+      const totalGapWidth = rowGap * (row.length - 1);
+      const availableForPhotos = containerWidth - totalGapWidth;
+      const sumRatios = row.reduce((sum, r) => sum + r.ratio, 0);
+      let rowHeight = availableForPhotos / sumRatios;
+
+      // safety cap: if only one or two photos landed in the final row, don't let
+      // them stretch to an absurd height just to fill the full width
+      const isLastRow = i === images.length;
+      if (isLastRow) {
+        rowHeight = Math.min(rowHeight, targetHeight * 1.6);
+      }
+
+      const rowEl = document.createElement('div');
+      rowEl.className = 'gallery__row';
+      rowEl.style.gap = `${rowGap}px`;
+      rowEl.style.marginBottom = `${6 + Math.random() * 14}px`; // varied vertical gap too
+
+      row.forEach(({ img, ratio }) => {
+        img.style.width = `${ratio * rowHeight}px`;
+        img.style.height = `${rowHeight}px`;
+        img.style.flexShrink = '0';
+        rowEl.appendChild(img);
+      });
+
+      galleryEl.appendChild(rowEl);
+    }
+  };
+
+  // wait until every photo has actually loaded (we need real dimensions)
+  const allImages = Array.from(galleryEl.querySelectorAll('.gallery__img'));
+  let loadedCount = 0;
+
+  const onEachLoaded = () => {
+    loadedCount++;
+    if (loadedCount === allImages.length) buildJustifiedGallery();
+  };
+
+  allImages.forEach(img => {
+    if (img.complete && img.naturalWidth) {
+      onEachLoaded();
+    } else {
+      img.addEventListener('load', onEachLoaded);
+      img.addEventListener('error', onEachLoaded);
+    }
+  });
+
+  // rebuild on resize so rows keep matching the container width (debounced)
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(buildJustifiedGallery, 200);
+  });
+}
+
 // Gallery lightbox: click a photo to expand it, prev/next to browse, Escape to close
 const galleryImages = Array.from(document.querySelectorAll('.gallery__img'));
 
