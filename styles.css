@@ -250,49 +250,29 @@ a{ color: inherit; text-decoration: none; }
   padding-bottom: 1rem;
 }
 
-/* ---------- Gallery (natural sizes, tight varied gaps) ---------- */
+/* ---------- Gallery (true justified rows, no cropping — built by JS in script.js) ---------- */
 
 .gallery{
   max-width: 1400px;
   margin: 0 auto;
   padding: 2rem 3rem 8rem;
-  display: flex;
-  align-items: flex-start;
+  position: relative;
 }
 
-.gallery__col{
+.gallery__row{
   display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-width: 0;
-}
-
-.gallery__item{
-  display: block;
 }
 
 .gallery__img{
-  width: 100%;
-  height: auto;
   display: block;
   border-radius: 2px;
   cursor: zoom-in;
   background: #EAE6DA;
 }
 
-.gallery__caption{
-  margin-top: 0.4rem;
-  font-size: 0.8rem;
-  color: var(--muted);
-}
-
 @media (max-width: 900px){
   .gallery{
-    flex-direction: column;
     padding: 1.5rem 1.5rem 8rem;
-  }
-  .gallery__col{
-    margin-right: 0 !important;
   }
 }
 
