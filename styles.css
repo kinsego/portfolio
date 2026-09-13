@@ -263,8 +263,11 @@ a{ color: inherit; text-decoration: none; }
 .gallery__item{
   display: block;
   break-inside: avoid;
-  margin-bottom: 4rem;
 }
+
+.gallery__item--gap-tight{ margin-bottom: 2rem; }
+.gallery__item--gap-normal{ margin-bottom: 4rem; }
+.gallery__item--gap-loose{ margin-bottom: 6.5rem; }
 
 .gallery__placeholder{
   width: 100%;
@@ -291,9 +294,9 @@ a{ color: inherit; text-decoration: none; }
     column-gap: 2.5rem;
     padding: 1.5rem 1.5rem 8rem;
   }
-  .gallery__item{
-    margin-bottom: 2.5rem;
-  }
+  .gallery__item--gap-tight{ margin-bottom: 1.25rem; }
+  .gallery__item--gap-normal{ margin-bottom: 2.5rem; }
+  .gallery__item--gap-loose{ margin-bottom: 4rem; }
 }
 
 @media (max-width: 560px){
