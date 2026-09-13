@@ -68,7 +68,7 @@ if (galleryEl) {
 
     let i = 0;
     while (i < cells.length) {
-      const targetHeight = 220; // baseline row height before exact-fit scaling
+      const targetHeight = 264; // baseline row height before exact-fit scaling
       const row = [];
       let widthAtTarget = 0;
 
