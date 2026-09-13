@@ -49,31 +49,90 @@ const observer = new IntersectionObserver(
 
 sections.forEach(section => observer.observe(section));
 
-// Minimap: highlight the photo currently in view, smooth-scroll on click
-const minimapLinks = document.querySelectorAll('.minimap__link');
+// Gallery: build true justified rows — every photo in a row shares the exact
+// same top and bottom edge, and no photo is ever cropped. The row height is
+// calculated (not forced) so the row's total width matches the container
+// exactly on both edges.
+const galleryEl = document.getElementById('travelogue-gallery');
 
-if (minimapLinks.length) {
-  const photoTargets = Array.from(minimapLinks)
-    .map(link => document.getElementById(link.dataset.target))
-    .filter(Boolean);
+if (galleryEl) {
+  const buildJustifiedGallery = () => {
+    const cells = Array.from(galleryEl.querySelectorAll('.gallery__cell'));
+    if (!cells.length) return;
 
-  const setActiveMinimap = (id) => {
-    minimapLinks.forEach(link => {
-      link.classList.toggle('is-active', link.dataset.target === id);
-    });
+    const containerWidth = galleryEl.clientWidth;
+    const gap = 12; // px, matches the 0.75rem gap used elsewhere
+
+    cells.forEach(cell => cell.remove());
+    galleryEl.innerHTML = '';
+
+    let i = 0;
+    while (i < cells.length) {
+      const targetHeight = 220; // baseline row height before exact-fit scaling
+      const row = [];
+      let widthAtTarget = 0;
+
+      while (i < cells.length) {
+        const cell = cells[i];
+        const img = cell.querySelector('.gallery__img');
+        const ratio = img.naturalWidth / img.naturalHeight;
+        const widthContribution = ratio * targetHeight;
+        const gapContribution = row.length > 0 ? gap : 0;
+
+        if (row.length > 0 && widthAtTarget + gapContribution + widthContribution > containerWidth) {
+          break;
+        }
+
+        row.push({ cell, ratio });
+        widthAtTarget += gapContribution + widthContribution;
+        i++;
+      }
+
+      const totalGapWidth = gap * (row.length - 1);
+      const availableWidth = containerWidth - totalGapWidth;
+      const sumRatios = row.reduce((sum, r) => sum + r.ratio, 0);
+      let rowHeight = availableWidth / sumRatios;
+
+      const isLastRow = i >= cells.length;
+      if (isLastRow) {
+        rowHeight = Math.min(rowHeight, targetHeight * 1.3);
+      }
+
+      const rowEl = document.createElement('div');
+      rowEl.className = 'gallery__row';
+
+      row.forEach(({ cell, ratio }) => {
+        cell.style.width = `${ratio * rowHeight}px`;
+        cell.style.height = `${rowHeight}px`;
+        rowEl.appendChild(cell);
+      });
+
+      galleryEl.appendChild(rowEl);
+    }
   };
 
-  const minimapObserver = new IntersectionObserver(
-    (entries) => {
-      const visible = entries
-        .filter(e => e.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-      if (visible) setActiveMinimap(visible.target.id);
-    },
-    { rootMargin: '-35% 0px -35% 0px', threshold: [0.1, 0.25, 0.5, 0.75] }
-  );
+  const allImages = Array.from(galleryEl.querySelectorAll('.gallery__img'));
+  let loadedCount = 0;
 
-  photoTargets.forEach(target => minimapObserver.observe(target));
+  const onEachLoaded = () => {
+    loadedCount++;
+    if (loadedCount === allImages.length) buildJustifiedGallery();
+  };
+
+  allImages.forEach(img => {
+    if (img.complete && img.naturalWidth) {
+      onEachLoaded();
+    } else {
+      img.addEventListener('load', onEachLoaded);
+      img.addEventListener('error', onEachLoaded);
+    }
+  });
+
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(buildJustifiedGallery, 200);
+  });
 }
 
 // Gallery lightbox: click a photo to expand it, prev/next to browse, Escape to close
