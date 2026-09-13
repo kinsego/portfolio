@@ -267,17 +267,9 @@ a{ color: inherit; text-decoration: none; }
   min-width: 0;
 }
 
-/* the two gaps between columns are deliberately different, and tight */
-.gallery__col--a{ margin-right: 0.5rem; }
-.gallery__col--b{ margin-right: 1.5rem; }
-
 .gallery__item{
   display: block;
 }
-
-.gallery__item--gap-tight{ margin-bottom: 0.4rem; }
-.gallery__item--gap-normal{ margin-bottom: 0.9rem; }
-.gallery__item--gap-loose{ margin-bottom: 1.6rem; }
 
 .gallery__img{
   width: 100%;
@@ -299,13 +291,9 @@ a{ color: inherit; text-decoration: none; }
     flex-direction: column;
     padding: 1.5rem 1.5rem 8rem;
   }
-  .gallery__col--a,
-  .gallery__col--b{
-    margin-right: 0;
+  .gallery__col{
+    margin-right: 0 !important;
   }
-  .gallery__item--gap-tight{ margin-bottom: 0.3rem; }
-  .gallery__item--gap-normal{ margin-bottom: 0.7rem; }
-  .gallery__item--gap-loose{ margin-bottom: 1.2rem; }
 }
 
 /* ---------- Lightbox (click a photo to expand it, prev/next to browse) ---------- */
