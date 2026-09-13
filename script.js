@@ -51,6 +51,8 @@ sections.forEach(section => observer.observe(section));
 
 // Gallery: build true justified rows (real image proportions, no cropping),
 // with every row's total width exactly matching the container's edges.
+// Some slots hold a single photo; others hold a vertical stack of two —
+// that's what creates size variation *within* a row, not just between rows.
 const galleryEl = document.getElementById('travelogue-gallery');
 
 if (galleryEl) {
@@ -60,56 +62,99 @@ if (galleryEl) {
 
     const containerWidth = galleryEl.clientWidth;
 
-    // pull cells out of the flow so we can regroup them into row divs
     cells.forEach(cell => cell.remove());
     galleryEl.innerHTML = '';
 
+    const getRatio = (cell) => {
+      const img = cell.querySelector('.gallery__img');
+      return img.naturalWidth / img.naturalHeight;
+    };
+
     let i = 0;
     while (i < cells.length) {
-      // much wider random range so rows vary dramatically — some rows very
-      // short (many small photos), some very tall (one or two big ones)
       const targetHeight = 70 + Math.random() * 380; // ~70–450px
       const rowGap = 6 + Math.random() * 14;
+      const innerStackGap = 5 + Math.random() * 8;
 
-      const row = [];
+      // each "slot" is either { type: 'single', cell } or { type: 'stack', cells: [a, b] }
+      const slots = [];
       let widthAtTarget = 0;
 
       while (i < cells.length) {
-        const cell = cells[i];
-        const img = cell.querySelector('.gallery__img');
-        const ratio = img.naturalWidth / img.naturalHeight;
-        const widthContribution = ratio * targetHeight;
-        const gapContribution = row.length > 0 ? rowGap : 0;
+        const makeStack = Math.random() < 0.35 && i + 1 < cells.length;
 
-        if (row.length > 0 && widthAtTarget + gapContribution + widthContribution > containerWidth) {
+        let slotRatio, slot;
+        if (makeStack) {
+          const a = cells[i];
+          const b = cells[i + 1];
+          const ratioA = getRatio(a);
+          const ratioB = getRatio(b);
+          // heuristic: a stacked pair takes roughly half the width a single
+          // full-height photo would, since it's two photos tall instead of one
+          slotRatio = ((ratioA + ratioB) / 2) * 0.55;
+          slot = { type: 'stack', cells: [a, b], ratioA, ratioB };
+        } else {
+          const a = cells[i];
+          slotRatio = getRatio(a);
+          slot = { type: 'single', cell: a, ratio: slotRatio };
+        }
+
+        const widthContribution = slotRatio * targetHeight;
+        const gapContribution = slots.length > 0 ? rowGap : 0;
+
+        if (slots.length > 0 && widthAtTarget + gapContribution + widthContribution > containerWidth) {
           break;
         }
 
-        row.push({ cell, ratio });
+        slots.push(slot);
         widthAtTarget += gapContribution + widthContribution;
-        i++;
+        i += slot.type === 'stack' ? 2 : 1;
       }
 
-      const totalGapWidth = rowGap * (row.length - 1);
-      const availableForPhotos = containerWidth - totalGapWidth;
-      const sumRatios = row.reduce((sum, r) => sum + r.ratio, 0);
-      let rowHeight = availableForPhotos / sumRatios;
+      const totalGapWidth = rowGap * (slots.length - 1);
+      const availableWidth = containerWidth - totalGapWidth;
+      const sumRatios = slots.reduce((sum, s) => sum + (s.type === 'stack' ? ((s.ratioA + s.ratioB) / 2) * 0.55 : s.ratio), 0);
+      let rowBaseHeight = availableWidth / sumRatios;
 
-      const isLastRow = i === cells.length;
+      const isLastRow = i >= cells.length;
       if (isLastRow) {
-        rowHeight = Math.min(rowHeight, targetHeight * 1.6);
+        rowBaseHeight = Math.min(rowBaseHeight, targetHeight * 1.6);
       }
 
       const rowEl = document.createElement('div');
       rowEl.className = 'gallery__row';
       rowEl.style.gap = `${rowGap}px`;
       rowEl.style.marginBottom = `${6 + Math.random() * 14}px`;
+      rowEl.style.alignItems = 'flex-start'; // let stacked slots be taller/shorter than singles
 
-      row.forEach(({ cell, ratio }) => {
-        cell.style.width = `${ratio * rowHeight}px`;
-        cell.style.height = `${rowHeight}px`;
-        cell.style.flexShrink = '0';
-        rowEl.appendChild(cell);
+      slots.forEach(slot => {
+        if (slot.type === 'single') {
+          const width = slot.ratio * rowBaseHeight;
+          slot.cell.style.width = `${width}px`;
+          slot.cell.style.height = `${rowBaseHeight}px`;
+          slot.cell.style.flexShrink = '0';
+          rowEl.appendChild(slot.cell);
+        } else {
+          const unitRatio = ((slot.ratioA + slot.ratioB) / 2) * 0.55;
+          const unitWidth = unitRatio * rowBaseHeight;
+
+          const stackEl = document.createElement('div');
+          stackEl.style.display = 'flex';
+          stackEl.style.flexDirection = 'column';
+          stackEl.style.flexShrink = '0';
+          stackEl.style.width = `${unitWidth}px`;
+          stackEl.style.gap = `${innerStackGap}px`;
+
+          [slot.cells[0], slot.cells[1]].forEach((cell, idx) => {
+            const ratio = idx === 0 ? slot.ratioA : slot.ratioB;
+            const h = unitWidth / ratio; // each sub-photo keeps its own true ratio — no crop
+            cell.style.width = `${unitWidth}px`;
+            cell.style.height = `${h}px`;
+            stackEl.appendChild(cell);
+          });
+
+          rowEl.appendChild(stackEl);
+        }
       });
 
       galleryEl.appendChild(rowEl);
