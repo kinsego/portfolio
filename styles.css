@@ -12,7 +12,7 @@
      Body/meta — 'Inter' (plain grotesk, quiet workhorse)
    ============================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@100;400;500;600&family=Inter:wght@400;500&display=swap');
 
 @font-face{
   font-family: 'Eagle Book';
@@ -315,8 +315,8 @@ a{ color: inherit; text-decoration: none; }
 }
 
 .about__text{
-  font-family: var(--display);
-  font-weight: 400;
+  font-family: 'Futura', 'Jost', sans-serif;
+  font-weight: 100;
   font-size: clamp(1.15rem, 2vw, 1.5rem);
   line-height: 1.5;
   letter-spacing: -0.01em;
