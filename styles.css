@@ -250,86 +250,72 @@ a{ color: inherit; text-decoration: none; }
   padding-bottom: 1rem;
 }
 
-/* ---------- Gallery (justified rows, varied heights + gaps) ---------- */
+/* ---------- Gallery (natural sizes, tight varied gaps) ---------- */
 
 .gallery{
   max-width: 1400px;
   margin: 0 auto;
   padding: 2rem 3rem 8rem;
   display: flex;
-  flex-direction: column;
+  align-items: flex-start;
 }
 
-.gallery__row{
+.gallery__col{
   display: flex;
-}
-
-/* row height varies — this is what makes rows read as different, like a real spread */
-.gallery__row--h-sm{ --row-h: 220px; }
-.gallery__row--h-md{ --row-h: 300px; }
-.gallery__row--h-lg{ --row-h: 380px; }
-
-/* space between rows (vertical) */
-.gallery__row--gap-tight{ margin-bottom: 0.75rem; }
-.gallery__row--gap-normal{ margin-bottom: 1.75rem; }
-.gallery__row--gap-loose{ margin-bottom: 3rem; }
-
-.gallery__item{
-  display: block;
+  flex-direction: column;
   flex: 1;
   min-width: 0;
 }
 
-/* space between photos within a row (horizontal) — reuses same row modifier
-   for the column-gap, applied via margin on all but the last item */
-.gallery__row--gap-tight .gallery__item:not(:last-child){ margin-right: 0.75rem; }
-.gallery__row--gap-normal .gallery__item:not(:last-child){ margin-right: 1.75rem; }
-.gallery__row--gap-loose .gallery__item:not(:last-child){ margin-right: 3rem; }
+/* the two gaps between columns are deliberately different, and tight */
+.gallery__col--a{ margin-right: 0.5rem; }
+.gallery__col--b{ margin-right: 1.5rem; }
+
+.gallery__item{
+  display: block;
+}
+
+.gallery__item--gap-tight{ margin-bottom: 0.4rem; }
+.gallery__item--gap-normal{ margin-bottom: 0.9rem; }
+.gallery__item--gap-loose{ margin-bottom: 1.6rem; }
 
 .gallery__img{
   width: 100%;
-  height: var(--row-h);
+  height: auto;
   display: block;
   border-radius: 2px;
   cursor: zoom-in;
   background: #EAE6DA;
-  object-fit: cover;
 }
 
 .gallery__caption{
-  margin-top: 0.6rem;
+  margin-top: 0.4rem;
   font-size: 0.8rem;
   color: var(--muted);
 }
 
 @media (max-width: 900px){
   .gallery{
+    flex-direction: column;
     padding: 1.5rem 1.5rem 8rem;
   }
-  .gallery__row{
-    flex-wrap: wrap;
+  .gallery__col--a,
+  .gallery__col--b{
+    margin-right: 0;
   }
-  .gallery__row--h-sm{ --row-h: 160px; }
-  .gallery__row--h-md{ --row-h: 200px; }
-  .gallery__row--h-lg{ --row-h: 240px; }
-  .gallery__item{
-    flex: 1 1 45%;
-  }
-  .gallery__row--gap-tight{ margin-bottom: 0.5rem; }
-  .gallery__row--gap-normal{ margin-bottom: 1.25rem; }
-  .gallery__row--gap-loose{ margin-bottom: 2rem; }
-  .gallery__row--gap-tight .gallery__item{ margin-right: 0.5rem; margin-bottom: 0.5rem; }
-  .gallery__row--gap-normal .gallery__item{ margin-right: 1rem; margin-bottom: 1rem; }
-  .gallery__row--gap-loose .gallery__item{ margin-right: 1.5rem; margin-bottom: 1.5rem; }
+  .gallery__item--gap-tight{ margin-bottom: 0.3rem; }
+  .gallery__item--gap-normal{ margin-bottom: 0.7rem; }
+  .gallery__item--gap-loose{ margin-bottom: 1.2rem; }
 }
 
-/* ---------- Lightbox (click a photo to expand it) ---------- */
+/* ---------- Lightbox (click a photo to expand it, prev/next to browse) ---------- */
 
 .lightbox{
   position: fixed;
   inset: 0;
   background: rgba(23, 20, 15, 0.92);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 3rem;
@@ -346,10 +332,40 @@ a{ color: inherit; text-decoration: none; }
 
 .lightbox__img{
   max-width: 90vw;
-  max-height: 90vh;
+  max-height: 80vh;
   object-fit: contain;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   border-radius: 2px;
+}
+
+.lightbox__nav{
+  margin-top: 1.25rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  font-family: var(--body);
+  font-size: 0.85rem;
+}
+
+.lightbox__prev,
+.lightbox__next{
+  background: none;
+  border: none;
+  color: rgba(246, 244, 238, 0.7);
+  cursor: pointer;
+  padding: 0.25rem;
+  font-family: inherit;
+  font-size: inherit;
+  transition: color 0.15s ease;
+}
+
+.lightbox__prev:hover,
+.lightbox__next:hover{
+  color: var(--paper);
+}
+
+.lightbox__divider{
+  color: rgba(246, 244, 238, 0.4);
 }
 
 .lightbox__close{
