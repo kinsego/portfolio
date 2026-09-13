@@ -74,6 +74,11 @@ if (galleryEl) {
 
     const containerWidth = galleryEl.clientWidth;
     const rand = makeSeededRandom(42); // fixed seed — always the same layout
+    // two alternating gap values — rows repeat gapA, gapB, gapA, gapB...
+    // instead of every row getting its own random spacing
+    const gapA = 8 + rand() * 20;
+    const gapB = 8 + rand() * 20;
+    let rowIndex = 0;
 
     cells.forEach(cell => cell.remove());
     galleryEl.innerHTML = '';
@@ -139,7 +144,8 @@ if (galleryEl) {
       const rowEl = document.createElement('div');
       rowEl.className = 'gallery__row';
       rowEl.style.gap = `${rowGap}px`;
-      rowEl.style.marginBottom = `${6 + rand() * 14}px`;
+      rowEl.style.marginBottom = `${rowIndex % 2 === 0 ? gapA : gapB}px`;
+      rowIndex++;
       rowEl.style.alignItems = 'flex-start'; // let stacked slots be taller/shorter than singles
 
       slots.forEach(slot => {
