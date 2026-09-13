@@ -199,3 +199,23 @@ if (galleryImages.length) {
     if (e.key === 'ArrowRight') showIndex(currentIndex + 1);
   });
 }
+
+// Intro splash: brief brand-color flash with the tagline, then reveals the
+// page underneath. Only plays once per browser session (not on every page
+// you click to afterward, or if you refresh right after seeing it).
+const intro = document.getElementById('intro');
+
+if (intro) {
+  if (sessionStorage.getItem('introShown')) {
+    intro.classList.add('is-skipped');
+  } else {
+    requestAnimationFrame(() => {
+      intro.classList.add('is-visible');
+    });
+
+    setTimeout(() => {
+      intro.classList.add('is-hidden');
+      sessionStorage.setItem('introShown', 'true');
+    }, 1800);
+  }
+}
