@@ -250,60 +250,77 @@ a{ color: inherit; text-decoration: none; }
   padding-bottom: 1rem;
 }
 
-/* ---------- Gallery (masonry, varied shapes, generous negative space) ---------- */
+/* ---------- Gallery (justified rows, varied heights + gaps) ---------- */
 
 .gallery{
   max-width: 1400px;
   margin: 0 auto;
   padding: 2rem 3rem 8rem;
-  column-count: 3;
-  column-gap: 1.75rem;
+  display: flex;
+  flex-direction: column;
 }
+
+.gallery__row{
+  display: flex;
+}
+
+/* row height varies — this is what makes rows read as different, like a real spread */
+.gallery__row--h-sm{ --row-h: 220px; }
+.gallery__row--h-md{ --row-h: 300px; }
+.gallery__row--h-lg{ --row-h: 380px; }
+
+/* space between rows (vertical) */
+.gallery__row--gap-tight{ margin-bottom: 0.75rem; }
+.gallery__row--gap-normal{ margin-bottom: 1.75rem; }
+.gallery__row--gap-loose{ margin-bottom: 3rem; }
 
 .gallery__item{
   display: block;
-  break-inside: avoid;
+  flex: 1;
+  min-width: 0;
 }
 
-.gallery__item--gap-tight{ margin-bottom: 0.75rem; }
-.gallery__item--gap-normal{ margin-bottom: 1.75rem; }
-.gallery__item--gap-loose{ margin-bottom: 3rem; }
+/* space between photos within a row (horizontal) — reuses same row modifier
+   for the column-gap, applied via margin on all but the last item */
+.gallery__row--gap-tight .gallery__item:not(:last-child){ margin-right: 0.75rem; }
+.gallery__row--gap-normal .gallery__item:not(:last-child){ margin-right: 1.75rem; }
+.gallery__row--gap-loose .gallery__item:not(:last-child){ margin-right: 3rem; }
 
 .gallery__img{
   width: 100%;
-  height: auto;
+  height: var(--row-h);
   display: block;
   border-radius: 2px;
   cursor: zoom-in;
   background: #EAE6DA;
-  transition: opacity 0.2s ease;
-}
-
-.gallery__img:hover{
-  opacity: 0.9;
+  object-fit: cover;
 }
 
 .gallery__caption{
-  margin-top: 0.85rem;
+  margin-top: 0.6rem;
   font-size: 0.8rem;
   color: var(--muted);
 }
 
 @media (max-width: 900px){
   .gallery{
-    column-count: 2;
-    column-gap: 1.25rem;
     padding: 1.5rem 1.5rem 8rem;
   }
-  .gallery__item--gap-tight{ margin-bottom: 0.5rem; }
-  .gallery__item--gap-normal{ margin-bottom: 1.25rem; }
-  .gallery__item--gap-loose{ margin-bottom: 2rem; }
-}
-
-@media (max-width: 560px){
-  .gallery{
-    column-count: 1;
+  .gallery__row{
+    flex-wrap: wrap;
   }
+  .gallery__row--h-sm{ --row-h: 160px; }
+  .gallery__row--h-md{ --row-h: 200px; }
+  .gallery__row--h-lg{ --row-h: 240px; }
+  .gallery__item{
+    flex: 1 1 45%;
+  }
+  .gallery__row--gap-tight{ margin-bottom: 0.5rem; }
+  .gallery__row--gap-normal{ margin-bottom: 1.25rem; }
+  .gallery__row--gap-loose{ margin-bottom: 2rem; }
+  .gallery__row--gap-tight .gallery__item{ margin-right: 0.5rem; margin-bottom: 0.5rem; }
+  .gallery__row--gap-normal .gallery__item{ margin-right: 1rem; margin-bottom: 1rem; }
+  .gallery__row--gap-loose .gallery__item{ margin-right: 1.5rem; margin-bottom: 1.5rem; }
 }
 
 /* ---------- Lightbox (click a photo to expand it) ---------- */
