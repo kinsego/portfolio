@@ -139,9 +139,9 @@ if (galleryEl) {
 const galleryImages = Array.from(document.querySelectorAll('.gallery__img'));
 
 if (galleryImages.length) {
-  // sort by the data-index we assigned when building the page, so prev/next
-  // moves through photos in the same left-to-right, top-to-bottom reading order
-  galleryImages.sort((a, b) => Number(a.dataset.index) - Number(b.dataset.index));
+  // uses the actual order photos appear in the page (not a fixed number baked
+  // into each one) — so if you reorder blocks in the HTML, prev/next just
+  // follows along automatically, no index bookkeeping needed
 
   const lightbox = document.createElement('div');
   lightbox.className = 'lightbox';
