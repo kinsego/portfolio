@@ -55,49 +55,47 @@ const galleryEl = document.getElementById('travelogue-gallery');
 
 if (galleryEl) {
   const buildJustifiedGallery = () => {
-    const images = Array.from(galleryEl.querySelectorAll('.gallery__img'));
-    if (!images.length) return;
+    const cells = Array.from(galleryEl.querySelectorAll('.gallery__cell'));
+    if (!cells.length) return;
 
     const containerWidth = galleryEl.clientWidth;
 
-    // pull images out of the flow so we can regroup them into row divs
-    images.forEach(img => img.remove());
+    // pull cells out of the flow so we can regroup them into row divs
+    cells.forEach(cell => cell.remove());
     galleryEl.innerHTML = '';
 
     let i = 0;
-    while (i < images.length) {
-      // random target height for this row — tight range, genuinely varied
-      const targetHeight = 140 + Math.random() * 110; // ~140–250px
-      const rowGap = 6 + Math.random() * 14;           // ~6–20px between photos in this row
+    while (i < cells.length) {
+      // much wider random range so rows vary dramatically — some rows very
+      // short (many small photos), some very tall (one or two big ones)
+      const targetHeight = 70 + Math.random() * 380; // ~70–450px
+      const rowGap = 6 + Math.random() * 14;
 
       const row = [];
       let widthAtTarget = 0;
 
-      while (i < images.length) {
-        const img = images[i];
+      while (i < cells.length) {
+        const cell = cells[i];
+        const img = cell.querySelector('.gallery__img');
         const ratio = img.naturalWidth / img.naturalHeight;
         const widthContribution = ratio * targetHeight;
         const gapContribution = row.length > 0 ? rowGap : 0;
 
         if (row.length > 0 && widthAtTarget + gapContribution + widthContribution > containerWidth) {
-          break; // this image would overflow — finalize the row without it
+          break;
         }
 
-        row.push({ img, ratio });
+        row.push({ cell, ratio });
         widthAtTarget += gapContribution + widthContribution;
         i++;
       }
 
-      // scale the row so its total width lands exactly on the container's edges —
-      // this is what keeps left/right aligned without cropping any photo
       const totalGapWidth = rowGap * (row.length - 1);
       const availableForPhotos = containerWidth - totalGapWidth;
       const sumRatios = row.reduce((sum, r) => sum + r.ratio, 0);
       let rowHeight = availableForPhotos / sumRatios;
 
-      // safety cap: if only one or two photos landed in the final row, don't let
-      // them stretch to an absurd height just to fill the full width
-      const isLastRow = i === images.length;
+      const isLastRow = i === cells.length;
       if (isLastRow) {
         rowHeight = Math.min(rowHeight, targetHeight * 1.6);
       }
@@ -105,20 +103,19 @@ if (galleryEl) {
       const rowEl = document.createElement('div');
       rowEl.className = 'gallery__row';
       rowEl.style.gap = `${rowGap}px`;
-      rowEl.style.marginBottom = `${6 + Math.random() * 14}px`; // varied vertical gap too
+      rowEl.style.marginBottom = `${6 + Math.random() * 14}px`;
 
-      row.forEach(({ img, ratio }) => {
-        img.style.width = `${ratio * rowHeight}px`;
-        img.style.height = `${rowHeight}px`;
-        img.style.flexShrink = '0';
-        rowEl.appendChild(img);
+      row.forEach(({ cell, ratio }) => {
+        cell.style.width = `${ratio * rowHeight}px`;
+        cell.style.height = `${rowHeight}px`;
+        cell.style.flexShrink = '0';
+        rowEl.appendChild(cell);
       });
 
       galleryEl.appendChild(rowEl);
     }
   };
 
-  // wait until every photo has actually loaded (we need real dimensions)
   const allImages = Array.from(galleryEl.querySelectorAll('.gallery__img'));
   let loadedCount = 0;
 
@@ -136,7 +133,6 @@ if (galleryEl) {
     }
   });
 
-  // rebuild on resize so rows keep matching the container width (debounced)
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
