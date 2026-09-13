@@ -290,7 +290,7 @@ a{ color: inherit; text-decoration: none; }
   text-align: center;
   padding: 1rem;
   font-family: var(--masthead-font);
-  font-size: clamp(1.2rem, 3vw, 2rem);
+  font-size: clamp(1.08rem, 2.7vw, 1.8rem);
   letter-spacing: -0.01em;
   color: var(--paper);
   background: rgba(0, 0, 0, 0.45);
