@@ -269,18 +269,19 @@ a{ color: inherit; text-decoration: none; }
 .gallery__item--gap-normal{ margin-bottom: 4rem; }
 .gallery__item--gap-loose{ margin-bottom: 6.5rem; }
 
-.gallery__placeholder{
+.gallery__img{
   width: 100%;
+  height: auto;
   display: block;
-  background: #EAE6DA;
   border-radius: 2px;
-  object-fit: cover;
+  cursor: zoom-in;
+  background: #EAE6DA;
+  transition: opacity 0.2s ease;
 }
 
-/* varied aspect ratios so the grid doesn't feel uniform */
-.gallery__item--tall .gallery__placeholder{ aspect-ratio: 3 / 4.5; }
-.gallery__item--wide .gallery__placeholder{ aspect-ratio: 16 / 10; }
-.gallery__item--square .gallery__placeholder{ aspect-ratio: 1 / 1; }
+.gallery__img:hover{
+  opacity: 0.9;
+}
 
 .gallery__caption{
   margin-top: 0.85rem;
@@ -303,6 +304,52 @@ a{ color: inherit; text-decoration: none; }
   .gallery{
     column-count: 1;
   }
+}
+
+/* ---------- Lightbox (click a photo to expand it) ---------- */
+
+.lightbox{
+  position: fixed;
+  inset: 0;
+  background: rgba(23, 20, 15, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.lightbox.is-open{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lightbox__img{
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  border-radius: 2px;
+}
+
+.lightbox__close{
+  position: fixed;
+  top: 1.5rem;
+  right: 1.75rem;
+  background: none;
+  border: none;
+  color: var(--paper);
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .lightbox{ transition: none; }
 }
 
 /* ---------- About ---------- */
