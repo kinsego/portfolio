@@ -72,16 +72,18 @@ if (galleryEl) {
 
     let i = 0;
     while (i < cells.length) {
-      const targetHeight = 70 + Math.random() * 380; // ~70–450px
-      const rowGap = 6 + Math.random() * 14;
-      const innerStackGap = 5 + Math.random() * 8;
+      const targetHeight = 60 + Math.random() * 440; // ~60–500px, wider spread
+      const rowGap = 5 + Math.random() * 18;
+      const innerStackGap = 4 + Math.random() * 10;
+      // how likely this specific row is to use stacked pairs — varies row to row
+      const stackChance = 0.15 + Math.random() * 0.45; // ~15%–60%
 
       // each "slot" is either { type: 'single', cell } or { type: 'stack', cells: [a, b] }
       const slots = [];
       let widthAtTarget = 0;
 
       while (i < cells.length) {
-        const makeStack = Math.random() < 0.35 && i + 1 < cells.length;
+        const makeStack = Math.random() < stackChance && i + 1 < cells.length;
 
         let slotRatio, slot;
         if (makeStack) {
