@@ -49,6 +49,33 @@ const observer = new IntersectionObserver(
 
 sections.forEach(section => observer.observe(section));
 
+// Minimap: highlight the photo currently in view, smooth-scroll on click
+const minimapLinks = document.querySelectorAll('.minimap__link');
+
+if (minimapLinks.length) {
+  const photoTargets = Array.from(minimapLinks)
+    .map(link => document.getElementById(link.dataset.target))
+    .filter(Boolean);
+
+  const setActiveMinimap = (id) => {
+    minimapLinks.forEach(link => {
+      link.classList.toggle('is-active', link.dataset.target === id);
+    });
+  };
+
+  const minimapObserver = new IntersectionObserver(
+    (entries) => {
+      const visible = entries
+        .filter(e => e.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (visible) setActiveMinimap(visible.target.id);
+    },
+    { rootMargin: '-35% 0px -35% 0px', threshold: [0.1, 0.25, 0.5, 0.75] }
+  );
+
+  photoTargets.forEach(target => minimapObserver.observe(target));
+}
+
 // Gallery lightbox: click a photo to expand it, prev/next to browse, Escape to close
 const galleryImages = Array.from(document.querySelectorAll('.gallery__img'));
 
