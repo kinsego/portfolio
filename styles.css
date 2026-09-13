@@ -3,7 +3,7 @@
    Color:
      --paper   #F6F4EE  warm paper background
      --ink     #17140F  near-black, warm
-     --press   #3E9CC4  sky-blue accent (sparing use)
+     --press   #2F9E9E  teal accent (sparing use)
      --rule    #C9C4B8  hairlines / leader dots
      --muted   #6E6858  secondary text
    Type:
@@ -24,7 +24,7 @@
 :root{
   --paper: #F6F4EE;
   --ink: #17140F;
-  --press: #3E9CC4;
+  --press: #2F9E9E;
   --rule: #C9C4B8;
   --muted: #6E6858;
 
