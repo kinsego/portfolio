@@ -7,11 +7,18 @@
      --rule    #C9C4B8  hairlines / leader dots
      --muted   #6E6858  secondary text
    Type:
-     Display — 'Jost' (geometric sans, close to the Eagle Book / Futura family)
+     Display — 'Eagle Book' (self-hosted .otf, falls back to Jost/Futura)
      Body/meta — 'Inter' (plain grotesk, quiet workhorse)
    ============================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Inter:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
+
+@font-face{
+  font-family: 'Eagle Book';
+  src: url('assets/fonts/eaglebook.otf') format('opentype');
+  font-weight: 400 700;
+  font-display: swap;
+}
 
 :root{
   --paper: #F6F4EE;
@@ -20,7 +27,7 @@
   --rule: #C9C4B8;
   --muted: #6E6858;
 
-  --display: 'Jost', 'Futura', sans-serif;
+  --display: 'Eagle Book', 'Jost', 'Futura', sans-serif;
   --body: 'Inter', -apple-system, sans-serif;
 }
 
