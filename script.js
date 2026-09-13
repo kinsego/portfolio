@@ -49,24 +49,42 @@ const observer = new IntersectionObserver(
 
 sections.forEach(section => observer.observe(section));
 
-// Gallery lightbox: click a photo to expand it, click/Escape to close
-const galleryImages = document.querySelectorAll('.gallery__img');
+// Gallery lightbox: click a photo to expand it, prev/next to browse, Escape to close
+const galleryImages = Array.from(document.querySelectorAll('.gallery__img'));
 
 if (galleryImages.length) {
+  // sort by the data-index we assigned when building the page, so prev/next
+  // moves through photos in the same left-to-right, top-to-bottom reading order
+  galleryImages.sort((a, b) => Number(a.dataset.index) - Number(b.dataset.index));
+
   const lightbox = document.createElement('div');
   lightbox.className = 'lightbox';
   lightbox.innerHTML = `
     <button class="lightbox__close" aria-label="Close">&times;</button>
     <img class="lightbox__img" src="" alt="">
+    <div class="lightbox__nav">
+      <button class="lightbox__prev">prev</button>
+      <span class="lightbox__divider">/</span>
+      <button class="lightbox__next">next</button>
+    </div>
   `;
   document.body.appendChild(lightbox);
 
   const lightboxImg = lightbox.querySelector('.lightbox__img');
-  const closeBtn = lightbox.querySelector('.lightbox__close');
+  const prevBtn = lightbox.querySelector('.lightbox__prev');
+  const nextBtn = lightbox.querySelector('.lightbox__next');
 
-  const openLightbox = (src, alt) => {
-    lightboxImg.src = src;
-    lightboxImg.alt = alt;
+  let currentIndex = 0;
+
+  const showIndex = (i) => {
+    currentIndex = (i + galleryImages.length) % galleryImages.length;
+    const img = galleryImages[currentIndex];
+    lightboxImg.src = img.src;
+    lightboxImg.alt = img.alt;
+  };
+
+  const openLightbox = (i) => {
+    showIndex(i);
     lightbox.classList.add('is-open');
   };
 
@@ -74,18 +92,24 @@ if (galleryImages.length) {
     lightbox.classList.remove('is-open');
   };
 
-  galleryImages.forEach(img => {
-    img.addEventListener('click', () => openLightbox(img.src, img.alt));
+  galleryImages.forEach((img, i) => {
+    img.addEventListener('click', () => openLightbox(i));
   });
 
+  prevBtn.addEventListener('click', () => showIndex(currentIndex - 1));
+  nextBtn.addEventListener('click', () => showIndex(currentIndex + 1));
+
   lightbox.addEventListener('click', (e) => {
-    // close when clicking the dark background, not the image itself
+    // close when clicking the dark background, not the image or controls
     if (e.target === lightbox) closeLightbox();
   });
 
-  closeBtn.addEventListener('click', closeLightbox);
+  lightbox.querySelector('.lightbox__close').addEventListener('click', closeLightbox);
 
   document.addEventListener('keydown', (e) => {
+    if (!lightbox.classList.contains('is-open')) return;
     if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') showIndex(currentIndex - 1);
+    if (e.key === 'ArrowRight') showIndex(currentIndex + 1);
   });
 }
