@@ -7,7 +7,8 @@
      --rule    #C9C4B8  hairlines / leader dots
      --muted   #6E6858  secondary text
    Type:
-     Display — 'Eagle Book' (self-hosted .otf, falls back to Jost/Futura)
+     Masthead only — 'Eagle Book' (self-hosted .otf)
+     Display (everything else) — 'Jost' / 'Futura' fallback
      Body/meta — 'Inter' (plain grotesk, quiet workhorse)
    ============================================ */
 
@@ -27,7 +28,8 @@
   --rule: #C9C4B8;
   --muted: #6E6858;
 
-  --display: 'Eagle Book', 'Jost', 'Futura', sans-serif;
+  --display: 'Jost', 'Futura', sans-serif;
+  --masthead-font: 'Eagle Book', 'Jost', 'Futura', sans-serif;
   --body: 'Inter', -apple-system, sans-serif;
 }
 
@@ -63,7 +65,7 @@ a{ color: inherit; text-decoration: none; }
 }
 
 .masthead__name{
-  font-family: var(--display);
+  font-family: var(--masthead-font);
   font-weight: 600;
   font-size: clamp(2.75rem, 7vw, 5rem);
   line-height: 0.95;
