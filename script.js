@@ -224,3 +224,43 @@ if (galleryImages.length) {
     if (e.key === 'ArrowRight') showIndex(currentIndex + 1);
   });
 }
+
+```javascript
+/* ========================================
+   INTRO SCREEN
+   ======================================== */
+
+const intro = document.getElementById("intro");
+
+/*
+   How long the intro stays on screen.
+
+   2400 = 2.4 seconds
+*/
+const INTRO_DURATION = 2400;
+
+window.addEventListener("load", function () {
+
+  /* Respect reduced-motion settings */
+  if (
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  ) {
+    intro.remove();
+    return;
+  }
+
+  /* Start the exit animation */
+  setTimeout(function () {
+
+    intro.classList.add("is-hidden");
+
+    /* Completely remove the intro */
+    setTimeout(function () {
+      intro.remove();
+    }, 750);
+
+  }, INTRO_DURATION);
+
+});
+```
+
