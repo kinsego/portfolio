@@ -1,22 +1,38 @@
-// Intro: the name fades in over a teal backdrop, in the same centered spot
-// it normally sits — then the backdrop fades away to reveal the rest of
-// the page already in place. Plays every time the page loads.
+// Intro: the name starts centered in the viewport, fades in there, then
+// moves up into its real resting position in the masthead while the teal
+// backdrop fades away — all happening together. Plays every page load.
 const introBackdrop = document.getElementById('introBackdrop');
 const introTagline = document.getElementById('intro-tagline');
 
 if (introBackdrop && introTagline) {
-  introTagline.classList.add('intro-pending', 'intro-on-backdrop');
+  // measure where the name naturally sits, then work out how far it needs
+  // to shift to appear dead-center in the viewport instead
+  const rect = introTagline.getBoundingClientRect();
+  const naturalCenterX = rect.left + rect.width / 2;
+  const naturalCenterY = rect.top + rect.height / 2;
+  const deltaX = window.innerWidth / 2 - naturalCenterX;
+  const deltaY = window.innerHeight / 2 - naturalCenterY;
 
+  introTagline.classList.add('intro-pending', 'intro-on-backdrop');
+  introTagline.style.transition = 'none';
+  introTagline.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+  void introTagline.offsetWidth; // force the browser to apply the line above before re-enabling transitions
+  introTagline.style.transition = '';
+
+  // fade the name in while it's still sitting centered
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       introTagline.classList.remove('intro-pending');
     });
   });
 
+  // after a beat, push it up to its real position, fade the backdrop away,
+  // and crossfade the color to teal — all at once
   setTimeout(() => {
+    introTagline.style.transform = '';
     introBackdrop.classList.add('is-hidden');
     introTagline.classList.remove('intro-on-backdrop');
-  }, 1800);
+  }, 1400);
 }
 
 // Dynamic year in masthead
