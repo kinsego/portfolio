@@ -29,7 +29,7 @@
   --muted: #6E6858;
 
   --display: 'Jost', 'Futura', sans-serif;
-  --masthead-font: 'Eagle Book', 'Jost', 'Futura', sans-serif;
+  ---font: 'Eagle Book', 'Jost', 'Futura', sans-serif;
   --body: 'Inter', -apple-system, sans-serif;
 }
 
@@ -45,7 +45,7 @@ html, body{
 
 a{ color: inherit; text-decoration: none; }
 
-/* ---------- Masthead ---------- */
+/* ----------  ---------- */
 
 .masthead{
   max-width: 1100px;
@@ -71,12 +71,16 @@ a{ color: inherit; text-decoration: none; }
   line-height: 0.95;
   margin: 0 0 0.5rem;
   text-transform: uppercase;
+   text-align: center;
   letter-spacing: -0.02em;
   color: var(--press);
 }
 
 .masthead__tagline{
   font-size: 1.05rem;
+   text-align: center;
+margin-left: auto;
+margin-right: auto;
   color: var(--muted);
   margin: 0;
   max-width: 40ch;
