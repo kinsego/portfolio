@@ -26,18 +26,19 @@ if (introBackdrop && introTagline) {
     });
   });
 
-  // after a beat, push the name up toward its real position
+  // after a beat, push the name up toward its real position — it stays
+  // white throughout this move, since the backdrop is still fully opaque
   setTimeout(() => {
     introTagline.style.transform = '';
-    introTagline.classList.remove('intro-on-backdrop');
   }, 1400);
 
-  // wait until the name is most of the way through that move before the
-  // backdrop starts fading — so the homepage reveals just as it settles in,
-  // not before
+  // only once the name has essentially arrived do the backdrop and the
+  // text color start changing — together, so the text is never teal
+  // against a still-solid teal backdrop (which read as a blank blue screen)
   setTimeout(() => {
     introBackdrop.classList.add('is-hidden');
-  }, 2100);
+    introTagline.classList.remove('intro-on-backdrop');
+  }, 2200);
 }
 
 // Dynamic year in masthead
