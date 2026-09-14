@@ -1,3 +1,28 @@
+// Intro: the name fades in over a teal backdrop, in the same centered spot
+// it normally sits — then the backdrop fades away to reveal the rest of
+// the page already in place. Plays once per browser session.
+const introBackdrop = document.getElementById('introBackdrop');
+const introTagline = document.getElementById('intro-tagline');
+
+if (introBackdrop && introTagline) {
+  if (sessionStorage.getItem('introShown')) {
+    introBackdrop.classList.add('is-skipped');
+  } else {
+    introTagline.classList.add('intro-pending');
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        introTagline.classList.remove('intro-pending');
+      });
+    });
+
+    setTimeout(() => {
+      introBackdrop.classList.add('is-hidden');
+      sessionStorage.setItem('introShown', 'true');
+    }, 1800);
+  }
+}
+
 // Dynamic year in masthead
 document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -198,24 +223,4 @@ if (galleryImages.length) {
     if (e.key === 'ArrowLeft') showIndex(currentIndex - 1);
     if (e.key === 'ArrowRight') showIndex(currentIndex + 1);
   });
-}
-
-// Intro splash: brief brand-color flash with the tagline, then reveals the
-// page underneath. Only plays once per browser session (not on every page
-// you click to afterward, or if you refresh right after seeing it).
-const intro = document.getElementById('intro');
-
-if (intro) {
-  if (sessionStorage.getItem('introShown')) {
-    intro.classList.add('is-skipped');
-  } else {
-    requestAnimationFrame(() => {
-      intro.classList.add('is-visible');
-    });
-
-    setTimeout(() => {
-      intro.classList.add('is-hidden');
-      sessionStorage.setItem('introShown', 'true');
-    }, 1800);
-  }
 }
