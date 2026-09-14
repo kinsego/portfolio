@@ -7,6 +7,43 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+  /* ---------- Intro (tagline fades in, backdrop reveals the rest) ---------- */
+
+.intro-backdrop{
+  position: fixed;
+  inset: 0;
+  background: var(--press);
+  z-index: 9998;
+  transition: opacity 0.7s ease;
+  pointer-events: none;
+}
+
+.intro-backdrop.is-hidden{
+  opacity: 0;
+}
+
+.intro-backdrop.is-skipped{
+  display: none;
+}
+
+#intro-tagline.intro-pending{
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+#intro-tagline{
+  transition: opacity 0.9s ease, transform 0.9s ease;
+  position: relative;
+  z-index: 9999;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .intro-backdrop,
+  #intro-tagline{
+    transition: none;
+  }
+}
 <header class="masthead">
   <div class="masthead__top">
     <span class="masthead__issue">No. 01 — Selected Works</span>
