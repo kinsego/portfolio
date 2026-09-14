@@ -1,253 +1,562 @@
-// Intro: the name starts centered in the viewport, fades in there, then
-// moves up into its real resting position in the masthead while the teal
-// backdrop fades away — all happening together. Plays every page load.
-const introBackdrop = document.getElementById('introBackdrop');
-const introTagline = document.getElementById('intro-tagline');
+/* ============================================
+   DESIGN TOKENS
+   Color:
+     --paper   #F6F4EE  warm paper background
+     --ink     #17140F  near-black, warm
+     --press   #01B1D0  teal accent (sparing use)
+     --rule    #C9C4B8  hairlines / leader dots
+     --muted   #6E6858  secondary text
+   Type:
+     Masthead only — 'Eagle Book' (self-hosted .otf)
+     Display (everything else) — 'Jost' / 'Futura' fallback
+     Body/meta — 'Inter' (plain grotesk, quiet workhorse)
+   ============================================ */
 
-if (introBackdrop && introTagline) {
-  // measure where the name naturally sits, then work out how far it needs
-  // to shift to appear dead-center in the viewport instead
-  const rect = introTagline.getBoundingClientRect();
-  const naturalCenterX = rect.left + rect.width / 2;
-  const naturalCenterY = rect.top + rect.height / 2;
-  const deltaX = window.innerWidth / 2 - naturalCenterX;
-  const deltaY = window.innerHeight / 2 - naturalCenterY;
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@100;400;500;600&family=Inter:wght@400;500&display=swap');
 
-  introTagline.classList.add('intro-pending', 'intro-on-backdrop');
-  introTagline.style.transition = 'none';
-  introTagline.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
-  void introTagline.offsetWidth; // force the browser to apply the line above before re-enabling transitions
-  introTagline.style.transition = '';
-
-  // fade the name in while it's still sitting centered
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      introTagline.classList.remove('intro-pending');
-    });
-  });
-
-  // after a beat, push the name up toward its real position — it stays
-  // white throughout this move, since the backdrop is still fully opaque
-  setTimeout(() => {
-    introTagline.style.transform = '';
-  }, 1400);
-
-  // only once the name has essentially arrived do the backdrop and the
-  // text color start changing — together, so the text is never teal
-  // against a still-solid teal backdrop (which read as a blank blue screen)
-  setTimeout(() => {
-    introBackdrop.classList.add('is-hidden');
-    introTagline.classList.remove('intro-on-backdrop');
-  }, 2200);
+@font-face{
+  font-family: 'Eagle Book';
+  src: url('assets/fonts/eaglebook.otf') format('opentype');
+  font-weight: 400 700;
+  font-display: swap;
 }
 
-// Dynamic year in masthead
-document.getElementById('year').textContent = new Date().getFullYear();
+:root{
+  --paper: #F6F4EE;
+  --ink: #17140F;
+  --press: #01B1D0;
+  --rule: #C9C4B8;
+  --muted: #6E6858;
 
-// Hover-preview: swap the large image and nudge the "physical" tilt
-const rows = document.querySelectorAll('.contents__row');
-const preview = document.getElementById('preview');
-const previewImage = document.getElementById('preview-image');
+  --display: 'Jost', 'Futura', sans-serif;
+  --masthead-font: 'Eagle Book', 'Jost', 'Futura', sans-serif;
+  --body: 'Inter', -apple-system, sans-serif;
+}
 
-rows.forEach(row => {
-  row.addEventListener('mouseenter', () => {
-    const src = row.getAttribute('data-preview');
-    if (!src) return;
+*{ box-sizing: border-box; }
 
-    previewImage.classList.remove('is-loaded');
-    preview.classList.add('is-active');
+html, body{
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+}
 
-    // preload, then fade in once ready
-    const img = new Image();
-    img.onload = () => {
-      previewImage.src = src;
-      previewImage.classList.add('is-loaded');
-    };
-    img.src = src;
-  });
-});
+a{ color: inherit; text-decoration: none; }
 
-// Fixed dock nav: highlight the section currently in view
-const dockLinks = document.querySelectorAll('.dock__link');
-const sections = ['about', 'work', 'contact']
-  .map(id => document.getElementById(id))
-  .filter(Boolean);
+/* ---------- Masthead ---------- */
 
-const setActive = (id) => {
-  dockLinks.forEach(link => {
-    link.classList.toggle('is-active', link.dataset.section === id);
-  });
-};
+.masthead{
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3rem 2rem 0.56rem;
+}
 
-const observer = new IntersectionObserver(
-  (entries) => {
-    // pick the entry most visible in the viewport right now
-    const visible = entries
-      .filter(e => e.isIntersecting)
-      .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-    if (visible) setActive(visible.target.id);
-  },
-  { rootMargin: '-40% 0px -40% 0px', threshold: [0.1, 0.25, 0.5, 0.75] }
-);
+.masthead__top{
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--muted);
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.01em;
+}
 
-sections.forEach(section => observer.observe(section));
+.masthead__name{
+  font-family: var(--masthead-font);
+  font-weight: 600;
+  font-size: clamp(2.75rem, 7vw, 5rem);
+  line-height: 0.95;
+  margin: 0 0 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-align: center;
+}
 
-// Explicit override: when you're at (or very near) the very top of the
-// page, always show "About" as active — the intersection-observer band
-// above can miss it since About sits so close to the top of the page.
-window.addEventListener('scroll', () => {
-  if (window.scrollY < 80) {
-    setActive('about');
+.masthead__tagline{
+  font-size: 1.05rem;
+  color: var(--muted);
+  margin: 0;
+  max-width: 40ch;
+}
+
+/* ---------- Intro (name fades in, backdrop reveals the rest) ---------- */
+
+.intro-backdrop{
+  position: fixed;
+  inset: 0;
+  background: var(--press);
+  z-index: 9998;
+  transition: opacity 1.2s ease;
+  pointer-events: none;
+}
+
+.intro-backdrop.is-hidden{
+  opacity: 0;
+}
+
+.intro-backdrop.is-skipped{
+  display: none;
+}
+
+#intro-tagline.intro-pending{
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+#intro-tagline.intro-on-backdrop{
+  color: var(--paper);
+}
+
+#intro-tagline{
+  transition: opacity 0.9s ease, transform 0.9s ease, color 0.7s ease;
+  position: relative;
+  z-index: 9999;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .intro-backdrop,
+  #intro-tagline{
+    transition: none;
   }
-});
-
-// Gallery: build true justified rows — every photo in a row shares the exact
-// same top and bottom edge, and no photo is ever cropped. The row height is
-// calculated (not forced) so the row's total width matches the container
-// exactly on both edges.
-const galleryEl = document.getElementById('travelogue-gallery');
-
-if (galleryEl) {
-  const buildJustifiedGallery = () => {
-    const cells = Array.from(galleryEl.querySelectorAll('.gallery__cell'));
-    if (!cells.length) return;
-
-    const containerWidth = galleryEl.clientWidth;
-    const gap = 5.4; // px, matches the 0.3375rem gap used elsewhere
-
-    cells.forEach(cell => cell.remove());
-    galleryEl.innerHTML = '';
-
-    let i = 0;
-    while (i < cells.length) {
-      const targetHeight = 264; // baseline row height before exact-fit scaling
-      const row = [];
-      let widthAtTarget = 0;
-
-      while (i < cells.length) {
-        const cell = cells[i];
-        const img = cell.querySelector('.gallery__img');
-        const ratio = img.naturalWidth / img.naturalHeight;
-        const widthContribution = ratio * targetHeight;
-        const gapContribution = row.length > 0 ? gap : 0;
-
-        if (row.length > 0 && widthAtTarget + gapContribution + widthContribution > containerWidth) {
-          break;
-        }
-
-        row.push({ cell, ratio });
-        widthAtTarget += gapContribution + widthContribution;
-        i++;
-      }
-
-      const totalGapWidth = gap * (row.length - 1);
-      const availableWidth = containerWidth - totalGapWidth;
-      const sumRatios = row.reduce((sum, r) => sum + r.ratio, 0);
-      let rowHeight = availableWidth / sumRatios;
-
-      const isLastRow = i >= cells.length;
-      if (isLastRow) {
-        rowHeight = Math.min(rowHeight, targetHeight * 1.3);
-      }
-
-      const rowEl = document.createElement('div');
-      rowEl.className = 'gallery__row';
-
-      row.forEach(({ cell, ratio }) => {
-        cell.style.width = `${ratio * rowHeight}px`;
-        cell.style.height = `${rowHeight}px`;
-        rowEl.appendChild(cell);
-      });
-
-      galleryEl.appendChild(rowEl);
-    }
-  };
-
-  const allImages = Array.from(galleryEl.querySelectorAll('.gallery__img'));
-  let loadedCount = 0;
-
-  const onEachLoaded = () => {
-    loadedCount++;
-    if (loadedCount === allImages.length) buildJustifiedGallery();
-  };
-
-  allImages.forEach(img => {
-    if (img.complete && img.naturalWidth) {
-      onEachLoaded();
-    } else {
-      img.addEventListener('load', onEachLoaded);
-      img.addEventListener('error', onEachLoaded);
-    }
-  });
-
-  let resizeTimer;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(buildJustifiedGallery, 200);
-  });
 }
 
-// Gallery lightbox: click a photo to expand it, prev/next to browse, Escape to close
-const galleryImages = Array.from(document.querySelectorAll('.gallery__img'));
+/* ---------- Contents / TOC layout ---------- */
 
-if (galleryImages.length) {
-  // uses the actual order photos appear in the page (not a fixed number baked
-  // into each one) — so if you reorder blocks in the HTML, prev/next just
-  // follows along automatically, no index bookkeeping needed
+.contents{
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem 2rem 4rem;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 3rem;
+  align-items: start;
+}
 
-  const lightbox = document.createElement('div');
-  lightbox.className = 'lightbox';
-  lightbox.innerHTML = `
-    <button class="lightbox__close" aria-label="Close">&times;</button>
-    <img class="lightbox__img" src="" alt="">
-    <div class="lightbox__nav">
-      <button class="lightbox__prev">prev</button>
-      <span class="lightbox__divider">/</span>
-      <button class="lightbox__next">next</button>
-    </div>
-  `;
-  document.body.appendChild(lightbox);
+.contents__list{
+  display: flex;
+  flex-direction: column;
+}
 
-  const lightboxImg = lightbox.querySelector('.lightbox__img');
-  const prevBtn = lightbox.querySelector('.lightbox__prev');
-  const nextBtn = lightbox.querySelector('.lightbox__next');
+.contents__row{
+  display: grid;
+  grid-template-columns: 2.5rem auto 1fr auto;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--rule);
+  transition: color 0.15s ease;
+}
 
-  let currentIndex = 0;
+.contents__row:hover{
+  color: var(--press);
+}
 
-  const showIndex = (i) => {
-    currentIndex = (i + galleryImages.length) % galleryImages.length;
-    const img = galleryImages[currentIndex];
-    lightboxImg.src = img.src;
-    lightboxImg.alt = img.alt;
-  };
+.contents__row:first-child{
+  border-top: 1px solid var(--rule);
+}
 
-  const openLightbox = (i) => {
-    showIndex(i);
-    lightbox.classList.add('is-open');
-  };
+.contents__number{
+  font-family: var(--body);
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
 
-  const closeLightbox = () => {
-    lightbox.classList.remove('is-open');
-  };
+.contents__row:hover .contents__number{
+  color: var(--press);
+}
 
-  galleryImages.forEach((img, i) => {
-    img.addEventListener('click', () => openLightbox(i));
-  });
+.contents__title{
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+  white-space: nowrap;
+}
 
-  prevBtn.addEventListener('click', () => showIndex(currentIndex - 1));
-  nextBtn.addEventListener('click', () => showIndex(currentIndex + 1));
+.contents__leader{
+  border-bottom: 1px dotted var(--rule);
+  height: 0.6em;
+  align-self: end;
+  min-width: 1.5rem;
+}
 
-  lightbox.addEventListener('click', (e) => {
-    // close when clicking the dark background, not the image or controls
-    if (e.target === lightbox) closeLightbox();
-  });
+.contents__meta{
+  font-size: 0.85rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
 
-  lightbox.querySelector('.lightbox__close').addEventListener('click', closeLightbox);
+/* ---------- Preview panel (the one playful moment) ---------- */
 
-  document.addEventListener('keydown', (e) => {
-    if (!lightbox.classList.contains('is-open')) return;
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowLeft') showIndex(currentIndex - 1);
-    if (e.key === 'ArrowRight') showIndex(currentIndex + 1);
-  });
+.preview{
+  position: sticky;
+  top: 3rem;
+  aspect-ratio: 4 / 5;
+  display: none;
+}
+
+.preview__frame{
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #EAE6DA;
+  box-shadow: 0 18px 40px rgba(23, 20, 15, 0.12);
+  transform: rotate(-1.2deg);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.preview.is-active .preview__frame{
+  transform: rotate(0.6deg);
+}
+
+.preview__image{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.preview__image.is-loaded{
+  opacity: 1;
+}
+
+@media (min-width: 860px){
+  .preview{ display: block; }
+}
+
+/* ---------- Travelogue (list version — kept for reference, unused if using gallery) ---------- */
+
+.travelogue{
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem 2rem 3rem;
+  border-top: 1px solid var(--rule);
+}
+
+.travelogue__inner{
+  padding-top: 2rem;
+}
+
+.travelogue__intro{
+  font-size: 0.95rem;
+  color: var(--muted);
+  max-width: 50ch;
+  margin: 0 0 1.5rem;
+}
+
+.travelogue__row{
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--rule);
+  transition: color 0.15s ease;
+}
+
+.travelogue__row:first-child{
+  border-top: 1px solid var(--rule);
+}
+
+.travelogue__row:hover{
+  color: var(--press);
+}
+
+.travelogue__title{
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+}
+
+.travelogue__leader{
+  border-bottom: 1px dotted var(--rule);
+  height: 0.6em;
+  align-self: end;
+  min-width: 1.5rem;
+}
+
+.travelogue__meta{
+  font-size: 0.8rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* ---------- Masthead variant: no name/tagline (used on Travelogue) ---------- */
+
+.masthead--minimal{
+  padding-bottom: 1rem;
+}
+
+/* ---------- Gallery (true justified rows — photos line up, no cropping) ---------- */
+
+.gallery-wrap{
+  max-width: 1400px;
+  margin: 2rem auto 0;
+  padding: 3rem 3rem 4rem;
+  background: var(--paper);
+  border-radius: 4px;
+}
+
+.gallery__row{
+  display: flex;
+  gap: 0.3375rem;
+  margin-bottom: 0.3375rem;
+}
+
+.gallery__cell{
+  position: relative;
+  overflow: hidden;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.gallery__img{
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: zoom-in;
+  background: #EAE6DA;
+}
+
+.gallery__hover-caption{
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1rem;
+  font-family: var(--masthead-font);
+  font-size: clamp(0.864rem, 2.16vw, 1.44rem);
+  letter-spacing: -0.01em;
+  color: var(--paper);
+  background: rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.gallery__cell:hover .gallery__hover-caption{
+  opacity: 1;
+}
+
+@media (max-width: 900px){
+  .gallery-wrap{
+    margin-top: 1.5rem;
+    padding: 2rem 1.5rem 3rem;
+    border-radius: 0;
+  }
+}
+
+/* ---------- Lightbox (click a photo to expand it, prev/next to browse) ---------- */
+
+.lightbox{
+  position: fixed;
+  inset: 0;
+  background: rgba(246, 244, 238, 0.97);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.lightbox.is-open{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lightbox__img{
+  max-width: 90vw;
+  max-height: 80vh;
+  object-fit: contain;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  border-radius: 2px;
+}
+
+.lightbox__nav{
+  margin-top: 1.25rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  font-family: var(--body);
+  font-size: 0.85rem;
+}
+
+.lightbox__prev,
+.lightbox__next{
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 0.25rem;
+  font-family: inherit;
+  font-size: inherit;
+  transition: color 0.15s ease;
+}
+
+.lightbox__prev:hover,
+.lightbox__next:hover{
+  color: var(--ink);
+}
+
+.lightbox__divider{
+  color: var(--rule);
+}
+
+.lightbox__close{
+  position: fixed;
+  top: 1.5rem;
+  right: 1.75rem;
+  background: none;
+  border: none;
+  color: var(--ink);
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .lightbox{ transition: none; }
+}
+
+/* ---------- About ---------- */
+
+.about{
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0.28rem 2rem 3rem;
+}
+
+.about__inner{
+  max-width: 60ch;
+  margin: 0.56rem auto 0;
+  text-align: center;
+  background: var(--press);
+  border-radius: 4px;
+  padding: 2rem;
+}
+
+.about__text{
+  font-family: 'Futura', 'Jost', sans-serif;
+  font-weight: 100;
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  margin: 0;
+  color: var(--paper);
+}
+
+/* ---------- Colophon / footer ---------- */
+
+.colophon{
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 2rem 3rem;
+  border-top: 1px solid var(--rule);
+}
+
+.colophon__row{
+  display: flex;
+  gap: 1.75rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.colophon__row a:hover{
+  color: var(--press);
+}
+
+/* room so the fixed dock never covers the last row of content */
+.colophon{
+  padding-bottom: 6rem;
+}
+
+/* ---------- Dock nav (fixed, persists through scroll) ---------- */
+
+.dock{
+  position: fixed;
+  left: 50%;
+  bottom: 1.5rem;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.25rem;
+  background: rgba(23, 20, 15, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 999px;
+  padding: 0.4rem;
+  box-shadow: 0 12px 30px rgba(23, 20, 15, 0.25);
+  z-index: 100;
+  max-width: calc(100vw - 2rem);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.dock::-webkit-scrollbar{
+  display: none;
+}
+
+.dock__link{
+  font-family: var(--body);
+  font-size: 0.85rem;
+  color: rgba(246, 244, 238, 0.65);
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  transition: color 0.2s ease, background 0.2s ease;
+  white-space: nowrap;
+}
+
+.dock__link:hover{
+  color: var(--paper);
+}
+
+.dock__link.is-active{
+  color: var(--paper);
+  background: var(--press);
+}
+
+@media (max-width: 480px){
+  .dock{
+    bottom: 1rem;
+    padding: 0.35rem;
+  }
+  .dock__link{
+    padding: 0.5rem 0.85rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* ---------- Motion preference ---------- */
+
+@media (prefers-reduced-motion: reduce){
+  .preview__frame,
+  .preview__image,
+  .contents__row{
+    transition: none;
+  }
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 640px){
+  .contents__row{
+    grid-template-columns: 2rem auto;
+    row-gap: 0.25rem;
+  }
+  .contents__leader{ display: none; }
+  .contents__meta{
+    grid-column: 2;
+    white-space: normal;
+  }
 }
