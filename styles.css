@@ -29,7 +29,7 @@
   --muted: #6E6858;
 
   --display: 'Jost', 'Futura', sans-serif;
-  ---font: 'Eagle Book', 'Jost', 'Futura', sans-serif;
+  --masthead-font: 'Eagle Book', 'Jost', 'Futura', sans-serif;
   --body: 'Inter', -apple-system, sans-serif;
 }
 
@@ -45,7 +45,7 @@ html, body{
 
 a{ color: inherit; text-decoration: none; }
 
-/* ----------  ---------- */
+/* ---------- Masthead ---------- */
 
 .masthead{
   max-width: 1100px;
@@ -71,19 +71,53 @@ a{ color: inherit; text-decoration: none; }
   line-height: 0.95;
   margin: 0 0 0.5rem;
   text-transform: uppercase;
-   text-align: center;
   letter-spacing: -0.02em;
   color: var(--press);
+  text-align: center;
 }
 
 .masthead__tagline{
   font-size: 1.05rem;
-   text-align: center;
-margin-left: auto;
-margin-right: auto;
   color: var(--muted);
   margin: 0;
   max-width: 40ch;
+}
+
+/* ---------- Intro (name fades in, backdrop reveals the rest) ---------- */
+
+.intro-backdrop{
+  position: fixed;
+  inset: 0;
+  background: var(--press);
+  z-index: 9998;
+  transition: opacity 0.7s ease;
+  pointer-events: none;
+}
+
+.intro-backdrop.is-hidden{
+  opacity: 0;
+}
+
+.intro-backdrop.is-skipped{
+  display: none;
+}
+
+#intro-tagline.intro-pending{
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+#intro-tagline{
+  transition: opacity 0.9s ease, transform 0.9s ease;
+  position: relative;
+  z-index: 9999;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .intro-backdrop,
+  #intro-tagline{
+    transition: none;
+  }
 }
 
 /* ---------- Contents / TOC layout ---------- */
@@ -516,52 +550,5 @@ margin-right: auto;
   .contents__meta{
     grid-column: 2;
     white-space: normal;
-  }
-}
-
-/* ---------- Intro (brief brand-color splash before the page reveals) ---------- */
-
-.intro{
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: var(--press);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  transition: opacity 0.6s ease;
-}
-
-.intro__text{
-  font-family: var(--masthead-font);
-  color: var(--paper);
-  font-size: clamp(1.5rem, 5vw, 3rem);
-  text-align: center;
-  line-height: 1.3;
-  opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
-}
-
-.intro.is-visible .intro__text{
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.intro.is-hidden{
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* if the intro already played this session, skip it instantly — no flash */
-.intro.is-skipped{
-  display: none;
-}
-
-@media (prefers-reduced-motion: reduce){
-  .intro,
-  .intro__text{
-    transition: none;
   }
 }
