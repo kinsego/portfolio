@@ -70,6 +70,15 @@ const observer = new IntersectionObserver(
 
 sections.forEach(section => observer.observe(section));
 
+// Explicit override: when you're at (or very near) the very top of the
+// page, always show "About" as active — the intersection-observer band
+// above can miss it since About sits so close to the top of the page.
+window.addEventListener('scroll', () => {
+  if (window.scrollY < 80) {
+    setActive('about');
+  }
+});
+
 // Gallery: build true justified rows — every photo in a row shares the exact
 // same top and bottom edge, and no photo is ever cropped. The row height is
 // calculated (not forced) so the row's total width matches the container
