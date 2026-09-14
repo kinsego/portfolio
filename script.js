@@ -5,7 +5,7 @@ const introBackdrop = document.getElementById('introBackdrop');
 const introTagline = document.getElementById('intro-tagline');
 
 if (introBackdrop && introTagline) {
-  introTagline.classList.add('intro-pending');
+  introTagline.classList.add('intro-pending', 'intro-on-backdrop');
 
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
@@ -15,6 +15,7 @@ if (introBackdrop && introTagline) {
 
   setTimeout(() => {
     introBackdrop.classList.add('is-hidden');
+    introTagline.classList.remove('intro-on-backdrop');
   }, 1800);
 }
 
