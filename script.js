@@ -19,18 +19,18 @@ if (introBackdrop && introTagline) {
   void introTagline.offsetWidth; // force the browser to apply the line above before re-enabling transitions
   introTagline.style.transition = '';
 
-  // fade the name in while it's still sitting centered
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      introTagline.classList.remove('intro-pending');
-    });
-  });
+  // hold on a blank teal screen for a second before the name starts
+  // fading in — a deliberate pause, not part of the fade itself
+  setTimeout(() => {
+    introTagline.classList.remove('intro-pending');
+  }, 1000);
 
-  // after a beat, push the name up toward its real position — it stays
-  // white throughout this move, since the backdrop is still fully opaque
+  // after the (now slower, ~1.6s) fade-in finishes and a short pause,
+  // push the name up toward its real position — it stays white throughout
+  // this move, since the backdrop is still fully opaque
   setTimeout(() => {
     introTagline.style.transform = '';
-  }, 1400);
+  }, 3200);
 
   // only once the name has essentially arrived do the backdrop and the
   // text color start changing — together, so the text is never teal
@@ -38,7 +38,7 @@ if (introBackdrop && introTagline) {
   setTimeout(() => {
     introBackdrop.classList.add('is-hidden');
     introTagline.classList.remove('intro-on-backdrop');
-  }, 2200);
+  }, 4000);
 }
 
 // Dynamic year in masthead
@@ -67,7 +67,11 @@ rows.forEach(row => {
   });
 });
 
-// Fixed dock nav: highlight the section currently in view
+// Fixed dock nav: highlight the section currently in view.
+// Uses a fixed horizontal line partway down the viewport and checks which
+// section it's currently passing through — this works correctly regardless
+// of how tall any individual section is (the old percentage-visible method
+// broke once Work got much taller than About/Contact).
 const dockLinks = document.querySelectorAll('.dock__link');
 const sections = ['about', 'work', 'contact']
   .map(id => document.getElementById(id))
@@ -79,27 +83,31 @@ const setActive = (id) => {
   });
 };
 
-const observer = new IntersectionObserver(
-  (entries) => {
-    // pick the entry most visible in the viewport right now
-    const visible = entries
-      .filter(e => e.isIntersecting)
-      .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-    if (visible) setActive(visible.target.id);
-  },
-  { rootMargin: '-40% 0px -40% 0px', threshold: [0.1, 0.25, 0.5, 0.75] }
-);
+const updateActiveSection = () => {
+  const lineY = window.innerHeight * 0.35;
 
-sections.forEach(section => observer.observe(section));
-
-// Explicit override: when you're at (or very near) the very top of the
-// page, always show "About" as active — the intersection-observer band
-// above can miss it since About sits so close to the top of the page.
-window.addEventListener('scroll', () => {
-  if (window.scrollY < 80) {
-    setActive('about');
+  // walk sections top to bottom; the active one is the last one whose
+  // top has already passed the line
+  let current = sections[0];
+  for (const section of sections) {
+    if (section.getBoundingClientRect().top <= lineY) {
+      current = section;
+    }
   }
-});
+
+  // special case: within 80px of the very bottom of the page, force the
+  // last section active (handles short final sections / footer padding)
+  const nearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 80;
+  if (nearBottom) {
+    current = sections[sections.length - 1];
+  }
+
+  if (current) setActive(current.id);
+};
+
+window.addEventListener('scroll', updateActiveSection);
+window.addEventListener('resize', updateActiveSection);
+updateActiveSection();
 
 // Gallery: build true justified rows — every photo in a row shares the exact
 // same top and bottom edge, and no photo is ever cropped. The row height is
