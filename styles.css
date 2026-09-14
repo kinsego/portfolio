@@ -552,3 +552,123 @@ a{ color: inherit; text-decoration: none; }
     white-space: normal;
   }
 }
+
+```css
+/* ========================================
+   INTRO SCREEN
+   ======================================== */
+
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+
+  display: grid;
+  place-items: center;
+
+  background: #ffd400;
+
+  opacity: 1;
+  visibility: visible;
+
+  transition:
+    opacity 700ms cubic-bezier(.76, 0, .24, 1),
+    visibility 700ms;
+}
+
+/* Intro disappearing */
+.intro.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Text container */
+.intro-content {
+  width: 92vw;
+  max-width: 1100px;
+
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* Intro text */
+.intro-line {
+  margin: 0;
+
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(2rem, 5.4vw, 5.8rem);
+  font-weight: 800;
+
+  line-height: 0.92;
+  letter-spacing: -0.055em;
+
+  opacity: 0;
+  transform: translateY(28px);
+
+  animation:
+    introText 900ms cubic-bezier(.16, 1, .3, 1)
+    forwards;
+}
+
+/* First line appears first */
+.intro-line-1 {
+  animation-delay: 250ms;
+}
+
+/* Second line appears slightly later */
+.intro-line-2 {
+  animation-delay: 500ms;
+}
+
+/* "in" has a different type style */
+.intro-line em {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  text-transform: lowercase;
+  letter-spacing: -0.03em;
+}
+
+/* Text animation */
+@keyframes introText {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   MOBILE
+   ======================================== */
+
+@media (max-width: 700px) {
+
+  .intro-content {
+    width: 90vw;
+  }
+
+  .intro-line {
+    font-size: clamp(1.8rem, 8vw, 3.5rem);
+  }
+
+}
+
+/* ========================================
+   ACCESSIBILITY
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .intro-line {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .intro {
+    transition: none;
+  }
+
+}
+```
+
