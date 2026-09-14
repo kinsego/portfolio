@@ -438,6 +438,9 @@ a{ color: inherit; text-decoration: none; }
 .about__inner{
   padding-top: 2rem;
   max-width: 60ch;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
 }
 
 .about__text{
