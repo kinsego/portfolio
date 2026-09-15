@@ -108,7 +108,7 @@ a{ color: inherit; text-decoration: none; }
 }
 
 #intro-tagline.intro-on-backdrop{
-  color: #cf993a;
+  color: var(--paper);
 }
 
 #intro-tagline{
