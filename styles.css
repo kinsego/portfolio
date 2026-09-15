@@ -72,7 +72,7 @@ a{ color: inherit; text-decoration: none; }
   margin: 0 0 0.75rem;
   text-transform: none;
   letter-spacing: -0.02em;
-  color: var(--press);
+  color: var(--ink);
   text-align: center;
 }
 
@@ -112,7 +112,7 @@ a{ color: inherit; text-decoration: none; }
 }
 
 #intro-tagline{
-  transition: opacity 1.6s ease, transform 0.576s ease, color 0.7s ease;
+  transition: opacity 0.78s ease, transform 0.576s ease, color 0.7s ease;
   position: relative;
   z-index: 9999;
 }
@@ -121,6 +121,28 @@ a{ color: inherit; text-decoration: none; }
   .intro-backdrop,
   #intro-tagline{
     transition: none;
+  }
+}
+
+/* the rest of the page (everything but the intro backdrop + name) — starts
+   slightly below and invisible, then pushes up into place once the
+   backdrop begins fading, same idea as the reference recording */
+.reveal-on-intro{
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal-on-intro.is-revealed{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce){
+  .reveal-on-intro{
+    transition: none;
+    opacity: 1;
+    transform: none;
   }
 }
 
@@ -451,7 +473,7 @@ a{ color: inherit; text-decoration: none; }
   line-height: 1.5;
   letter-spacing: -0.01em;
   margin: 0;
-  color: var(--ink);
+  color: var(--press);
 }
 
 /* ---------- Colophon / footer ---------- */
