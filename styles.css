@@ -314,6 +314,89 @@ a{ color: inherit; text-decoration: none; }
   padding-bottom: 1rem;
 }
 
+/* ---------- Project case-study page ---------- */
+
+.project{
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem 2rem 8rem;
+}
+
+.project__intro{
+  padding: 2rem 0 3rem;
+  text-align: center;
+}
+
+.project__title{
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  margin: 0 0 0.5rem;
+}
+
+.project__meta{
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+.project__hero{
+  margin-bottom: 3rem;
+}
+
+.project__hero--small{
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.project__placeholder{
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: #EAE6DA;
+  border-radius: 2px;
+}
+
+.project__grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.project__placeholder--tall{
+  aspect-ratio: 3 / 4;
+}
+
+.project__section{
+  margin-bottom: 3rem;
+}
+
+.project__heading{
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--press);
+  margin: 0 0 1rem;
+}
+
+.project__text{
+  font-family: var(--body);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--ink);
+  margin: 0 0 1rem;
+  max-width: 65ch;
+}
+
+@media (max-width: 640px){
+  .project__grid{
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ---------- Gallery (true justified rows — photos line up, no cropping) ---------- */
 
 .gallery-wrap{
