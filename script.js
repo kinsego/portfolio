@@ -30,7 +30,7 @@ if (introBackdrop && introTagline) {
   // this move, since the backdrop is still fully opaque
   setTimeout(() => {
     introTagline.style.transform = '';
-  }, 1000);
+  }, 2600);
 
   // only once the name has essentially arrived do the backdrop, the text
   // color, and the rest of the page all change together — so nothing is
