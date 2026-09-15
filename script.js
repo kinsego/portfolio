@@ -32,12 +32,16 @@ if (introBackdrop && introTagline) {
     introTagline.style.transform = '';
   }, 3200);
 
-  // only once the name has essentially arrived do the backdrop and the
-  // text color start changing — together, so the text is never teal
-  // against a still-solid teal backdrop (which read as a blank blue screen)
+  // only once the name has essentially arrived do the backdrop, the text
+  // color, and the rest of the page all change together — so nothing is
+  // teal-on-teal invisible, and the page pushes up into view at the same
+  // moment the backdrop clears (matching the reference recording)
   setTimeout(() => {
     introBackdrop.classList.add('is-hidden');
     introTagline.classList.remove('intro-on-backdrop');
+    document.querySelectorAll('.reveal-on-intro').forEach(el => {
+      el.classList.add('is-revealed');
+    });
   }, 3680);
 }
 
