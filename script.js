@@ -23,7 +23,7 @@ if (introBackdrop && introTagline) {
   // fading in — a deliberate pause, not part of the fade itself
   setTimeout(() => {
     introTagline.classList.remove('intro-pending');
-  }, 800);
+  }, 200);
 
   // after the (now slower, ~1.6s) fade-in finishes and a short pause,
   // push the name up toward its real position — it stays white throughout
