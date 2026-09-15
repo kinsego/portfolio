@@ -38,7 +38,7 @@ if (introBackdrop && introTagline) {
   setTimeout(() => {
     introBackdrop.classList.add('is-hidden');
     introTagline.classList.remove('intro-on-backdrop');
-  }, 3800);
+  }, 3680);
 }
 
 // Dynamic year in masthead
