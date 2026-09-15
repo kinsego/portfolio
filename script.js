@@ -30,7 +30,7 @@ if (introBackdrop && introTagline) {
   // this move, since the backdrop is still fully opaque
   setTimeout(() => {
     introTagline.style.transform = '';
-  }, 2000);
+  }, 1000);
 
   // only once the name has essentially arrived do the backdrop, the text
   // color, and the rest of the page all change together — so nothing is
@@ -42,7 +42,7 @@ if (introBackdrop && introTagline) {
     document.querySelectorAll('.reveal-on-intro').forEach(el => {
       el.classList.add('is-revealed');
     });
-  }, 2280);
+  }, 1980);
 }
 
 // Dynamic year in masthead
