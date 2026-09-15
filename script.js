@@ -42,7 +42,7 @@ if (introBackdrop && introTagline) {
     document.querySelectorAll('.reveal-on-intro').forEach(el => {
       el.classList.add('is-revealed');
     });
-  }, 2280);
+  }, 2380);
 }
 
 // Dynamic year in masthead
