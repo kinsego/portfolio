@@ -72,7 +72,7 @@ a{ color: inherit; text-decoration: none; }
   margin: 0 0 0.75rem;
   text-transform: none;
   letter-spacing: -0.02em;
-  color: var(--#cf993a);
+  color: var(#cf993a);
   text-align: center;
 }
 
